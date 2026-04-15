@@ -5,7 +5,7 @@
 @;	pere.millan@urv.cat
 @;	(Març 2021-2023, Febrer 2024, Març 2025, Març 2026)
 @;-----------------------------------------------------------------------
-@;	Programador/a 1: xxx.xxx@estudiants.urv.cat
+@;	Programador/a 1: evelio.ruiz@estudiants.urv.cat
 @;	Programador/a 2: yyy.yyy@estudiants.urv.cat
 @;-----------------------------------------------------------------------
 @; © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
@@ -286,10 +286,36 @@ int_to_e9m22_s:
 @;		R0 		-> valor E9M22 de (num1 + num2).
 @;-----------------------------------------------------------------------
 	.global e9m22_add_s
-e9m22_add_s:
-				@; ús de registres:
-				@; r0: ...
-		push {lr}
+E9M22_add_s:
+	push {r1-r10,lr}          @; Guarda en pila los registros que se usarán (r1 a r10 y el retorno)
+
+	ldr r2, =E9M22_MASK_EXP    @;mascara per extraure exp
+	and r3, r0, r2            @; extreiem l'exp de num1
+	cmp r3, r2                @; comproba si aquest exp es especial
+	beq infinito             @; si es equal (beq) pasem a tractar infinit
+
+	and r4, r1, r2            @; Extreiem exp num2
+	cmp r4, r2                @; comproba si aquest exp es especial
+	beq infinito             
+
+	ldr r3, =E9M22_MASK_FRAC   @; mascara per extraure la part frac
+	orr r4, r2, r3            @; r4 = máscara per detectar valor 0 (exponent + fraccio tot 0)
+	tst r0, r4                @; ¿num1 == 0?
+	moveq r0, r1             @; Si num1 es 0, el resultat es num2
+	beq fi
+
+	tst r1, r4                @; ¿num2 == 0?
+	beq fi                   @; Si num2 es 0 el resultat es r0 o num1
+
+	tst r0, r2                
+	beq comprobar_denormal   
+	b extraer_componentes   
+
+comprobar_denormal:
+	
+
+extraer_componentes:
+	
 
 		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
 		

@@ -7,7 +7,7 @@
 @;	pere.millan@urv.cat
 @;	(Març 2021-2023, Febrer 2024, Març 2025, Març 2026)
 @;--------------------------------------------------------------------
-@;	Programador/a 1: xxx.xxx@estudiants.urv.cat
+@;	Programador/a 1: evelio.ruiz@estudiants.urv.cat
 @;	Programador/a 2: yyy.yyy@estudiants.urv.cat
 @;--------------------------------------------------------------------
 @; © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
