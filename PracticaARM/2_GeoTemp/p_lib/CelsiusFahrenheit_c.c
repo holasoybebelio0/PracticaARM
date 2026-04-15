@@ -1,20 +1,16 @@
-﻿/*--------------------------------------------------------------------
+﻿/*----------------------------------------------------------------
 |   CelsiusFahrenheit.c: rutines de conversió de temperatura 
 |						 en format de Coma Flotant E9M22. 
 |		Implementació cridant rutines aritmètiques libE9M22.
-| --------------------------------------------------------------------
+| ----------------------------------------------------------------
 |	santiago.romani@urv.cat
 |	pere.millan@urv.cat
-|	(Febrer-Març 2025, Febrer 2026)
-| --------------------------------------------------------------------
-| © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
-| Ús exclusiu dins l’assignatura; prohibida la seva redistribució.
-| Consulteu la llicència: ACADEMIC_LICENSE_URV_FC.txt
-| --------------------------------------------------------------------*/
+|	(Febrer-Març 2025)
+| ----------------------------------------------------------------*/
 
 #include "E9M22.h"	/* E9M22: tipus Coma Flotant E9M22
                        MAKE_E9M22(real): codifica un valor real en format E9M22
-                       e9m22_add/sub/mul: rutines llibreria libE9M22
+                       E9M22_add/sub/mul: rutines llibreria libE9M22
                     */
 
 
@@ -23,15 +19,15 @@
                         usant valors codificats en Coma Flotant E9M22.
     resultat = (input * 9/5) + 32.0;
 */
-e9m22_t Celsius2Fahrenheit( e9m22_t input )
+E9M22_t Celsius2Fahrenheit( E9M22_t input )
 {
-    e9m22_t resultat;
+    E9M22_t resultat;
 
         // 1a part càlcul: resultat = (input * 9/5)
-    resultat = e9m22_mul( input, MAKE_E9M22(9.0/5.0) );
+    resultat = E9M22_mul( input, MAKE_E9M22(9.0/5.0) );
 
         // 2a part càlcul: resultat = (input * 9/5) + 32.0
-    resultat = e9m22_add( resultat, MAKE_E9M22(32.0) );
+    resultat = E9M22_add( resultat, MAKE_E9M22(32.0) );
 
     return resultat;
 }
@@ -42,15 +38,15 @@ e9m22_t Celsius2Fahrenheit( e9m22_t input )
                         usant valors codificats en Coma Flotant E9M22.
     resultat = (input - 32.0) * 5/9;
 */
-e9m22_t Fahrenheit2Celsius(e9m22_t input)
+E9M22_t Fahrenheit2Celsius(E9M22_t input)
 {
-    e9m22_t resultat;
+    E9M22_t resultat;
 
         // 1a part càlcul: resultat = (input - 32.0)
-    resultat = e9m22_sub( input, MAKE_E9M22(32.0) );
+    resultat = E9M22_sub( input, MAKE_E9M22(32.0) );
 
         // 2a part càlcul: resultat = (input - 32.0) * 5/9
-    resultat = e9m22_mul( resultat, MAKE_E9M22(5.0/9.0) );
+    resultat = E9M22_mul( resultat, MAKE_E9M22(5.0/9.0) );
 
     return resultat;
 }

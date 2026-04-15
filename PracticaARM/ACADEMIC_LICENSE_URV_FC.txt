@@ -1,0 +1,126 @@
+ACADEMIC LICENSE – Universitat Rovira i Virgili
+===============================================
+Version: 1.1
+Date: 2026-03-16
+© Universitat Rovira i Virgili. All rights reserved / Tots els drets reservats / Todos los derechos reservados
+-----------------------------------------------
+Índex / Índice / Index
+- Català
+- Español
+- English
+-----------------------------------------------
+
+CATALÀ
+-------
+Llicència Acadèmica Personalitzada – © Universitat Rovira i Virgili
+
+Assignatura: Fonaments de Computadors (FC, codis 17234002 i 17914010) — en endavant, “l’assignatura”
+Titularitat: Universitat Rovira i Virgili
+Tots els drets reservats
+
+Aquest codi és propietat intel·lectual de la Universitat Rovira i Virgili, creat i cedit pel personal docent de l’assignatura. L’ús del codi es regeix pels termes següents:
+
+1) Concessió de permís
+   S’atorga permís a les persones oficialment matriculades a l’assignatura per utilitzar i modificar aquest codi exclusivament per completar les activitats acadèmiques de l’assignatura durant el curs acadèmic en què la persona està matriculada, llevat que la URV n’autoritzi una pròrroga per escrit.
+
+2) Restriccions estrictes
+   a. Redistribuir el codi, totalment o parcialment, en qualsevol format.
+   b. Publicar o pujar el codi (original o modificat) a plataformes en línia públiques o privades —com GitHub, Bitbucket o repositoris/llocs web personals— excepte les plataformes proporcionades per la URV per al lliurament i seguiment de les pràctiques.
+   c. Utilitzar el codi, o versions modificades, per a finalitats no relacionades amb les activitats de l’assignatura.
+   d. Utilitzar el codi font per entrenar sistemes d’Intel·ligència Artificial o integrar-lo en processos d’IA generativa.
+
+3) Obres derivades dins del curs
+   Es permet crear versions modificades del codi només per completar activitats de l’assignatura. Les condicions d’aquesta llicència s’estenen automàticament a qualsevol codi nou o modificat que formi part del projecte informàtic de la pràctica de l’assignatura. Les persones autores del codi derivat retenen l’autoria, però renuncien a aplicar condicions de còpia, modificació, distribució o publicació diferents de les establertes en aquesta llicència.
+
+4) Conservació del codi després del curs
+   Es permet conservar una còpia per a consulta personal, sense autorització de publicació ni distribució. En cas de repetir l’assignatura, es permet la reutilització només si s’han de completar les mateixes tasques o pràctiques del curs en què es va crear el codi original.
+
+5) Absència de garanties
+   El codi es proporciona “tal com és”, sense cap garantia de funcionament o adequació. La URV no es fa responsable de cap dany derivat del seu ús.
+
+6) Conseqüències d’incompliment
+   L’incompliment pot comportar mesures disciplinàries d’acord amb la normativa acadèmica de la URV i, si escau, responsabilitats derivades de la legislació sobre propietat intel·lectual.
+
+7) Acceptació
+   L’ús del codi implica l’acceptació íntegra d’aquesta llicència.
+
+8) Prevalença lingüística
+   En cas de discrepància entre versions, preval la versió catalana.
+
+-----------------------------------------------
+
+ESPAÑOL
+--------
+Licencia Académica Personalizada – © Universitat Rovira i Virgili
+
+Asignatura: Fundamentos de Computadores (FC, códigos 17234002 y 17914010) — en adelante, “la asignatura”
+Titularidad: Universitat Rovira i Virgili
+Todos los derechos reservados
+
+Este código es propiedad intelectual de la Universitat Rovira i Virgili, creado y cedido por el personal docente de la asignatura. El uso del código se rige por los siguientes términos:
+
+1) Concesión de permiso
+   Se concede permiso a las personas oficialmente matriculadas en la asignatura para usar y modificar este código exclusivamente para completar las actividades académicas de la asignatura durante el curso académico en el que la persona está matriculada, salvo prórroga otorgada por escrito por la URV.
+
+2) Restricciones estrictas
+   a. Redistribuir el código, total o parcialmente, en cualquier formato.
+   b. Publicar o subir el código (original o modificado) a plataformas en línea públicas o privadas —como GitHub, Bitbucket o repositorios/sitios web personales— salvo las plataformas proporcionadas por la URV para la entrega y seguimiento de las prácticas.
+   c. Usar el código, o sus modificaciones, para fines no relacionados con las actividades de la asignatura.
+   d. Emplear el código fuente para entrenar sistemas de Inteligencia Artificial o integrarlo en procesos de IA generativa.
+
+3) Trabajos derivados dentro del curso
+   Se permite crear versiones modificadas del código solo para completar actividades de la asignatura. Las condiciones de esta licencia se extienden automáticamente a cualquier código nuevo o modificado que forme parte del proyecto informático de la práctica de la asignatura. Las personas autoras del código derivado conservan su autoría, pero renuncian a aplicar condiciones de copia, modificación, distribución o publicación distintas de las previstas en esta licencia.
+
+4) Conservación tras el curso
+   Se permite conservar una copia para consulta personal, sin autorización para su publicación o distribución. En caso de repetir la asignatura, se permite la reutilización solo si deben completarse las mismas tareas o prácticas del curso en que se creó el código original.
+
+5) Ausencia de garantías
+   El código se proporciona “tal cual”, sin garantías. La URV no se hace responsable de daños derivados de su uso.
+
+6) Consecuencias por incumplimiento
+   El incumplimiento puede conllevar medidas disciplinarias según la normativa académica de la URV y, en su caso, responsabilidades derivadas de la legislación sobre propiedad intelectual.
+
+7) Aceptación
+   El uso del código implica la aceptación total de esta licencia.
+
+8) Prevalencia lingüística
+   En caso de discrepancias entre versiones, prevalece la versión catalana.
+
+-----------------------------------------------
+
+ENGLISH
+-------
+Custom Academic License – © Universitat Rovira i Virgili
+
+Course: Fundamentals of Computers (FC, codes 17234002 and 17914010) — hereinafter, “the course”
+Ownership: Universitat Rovira i Virgili
+All rights reserved
+
+This code is the intellectual property of the Universitat Rovira i Virgili, created and provided by the course’s teaching staff. Use of the code is governed by the following terms:
+
+1) Permission grant
+   Permission is granted to individuals officially enrolled in the course to use and modify this code exclusively for completing course activities during the academic year in which the individual is enrolled, unless an extension is granted in writing by the URV.
+
+2) Strict restrictions
+   a. Redistributing the code, in whole or in part, in any format.
+   b. Publishing or uploading the code (original or modified) to public or private online platforms —such as GitHub, Bitbucket, or personal repositories/websites— except the platforms provided by the URV for coursework submission and tracking.
+   c. Using the code, or modified versions, for purposes unrelated to the course activities.
+   d. Using the source code to train Artificial Intelligence systems or integrating it into generative‑AI processes.
+
+3) Derivative works within the course
+   Creating modified versions of the code is allowed only to complete course activities. The conditions of this license automatically extend to any new or modified code that forms part of the software project of the course assignment. Authors retain authorship but waive the right to apply copying, modification, distribution, or publication terms other than those established herein.
+
+4) Code retention after the course
+   One copy may be kept for personal reference, without permission to publish or distribute it. If the course is retaken, reuse is allowed only if the same tasks or assignments must be completed as in the year the original code was created.
+
+5) No warranty
+   The code is provided “as is”, without any warranty. URV shall not be liable for damages arising from its use.
+
+6) Consequences of violation
+   Non‑compliance may lead to academic measures in accordance with URV regulations and, where applicable, liability under intellectual property law.
+
+7) Acceptance
+   Using the code implies full acceptance of this license.
+
+8) Language precedence
+   In case of discrepancies between versions, the Catalan version prevails.

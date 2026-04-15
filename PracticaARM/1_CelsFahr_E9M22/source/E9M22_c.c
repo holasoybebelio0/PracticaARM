@@ -3,6 +3,10 @@
 | ------------------------------------------------------------------
 |	pere.millan@urv.cat
 |	(Febrer-Març 2025, Febrer-Març 2026)
+| ------------------------------------------------------------------
+| © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
+| Ús exclusiu dins l’assignatura; prohibida la seva redistribució.
+| Consulteu la llicència: ACADEMIC_LICENSE_URV_FC.txt
 | ------------------------------------------------------------------*/
 
 #include "E9M22.h"	/* e9m22_t: tipus Coma Flotant E9M22
@@ -309,7 +313,7 @@ e9m22_t float_to_e9m22_c_(float num)
         }
         else	/* Infinit (amb signe) */
         {
-            resultat = signe | E9M22_MASK_EXP; // Bits fracció/mantisa/significand a 0
+            resultat = signe | E9M22_MASK_EXP; // Bits fracció/mantissa/significand a 0
         }
     }
     else	/* Normal, Zero o Denormal */
@@ -969,7 +973,7 @@ e9m22_cmp_t e9m22_compare_c_(e9m22_t num1, e9m22_t num2)
 e9m22_class_t e9m22_decompose_c_( e9m22_t num,	// Número E9M22 a descomposar
 					unsigned int *sign_out,	// adreça on desar el signe (al MSB)
 					signed short *exp_out,	// adreça on desar l'exponent real (sense excés)
-					unsigned int *mant_out	// adreça on desar la mantisa (amb 1, implícit)
+					unsigned int *mant_out	// adreça on desar la mantissa (amb 1, implícit)
 						// (si alguna adreça és 0/NULL, no s'escriu aquell component)
 		)
 			/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

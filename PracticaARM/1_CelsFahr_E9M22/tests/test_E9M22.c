@@ -1,13 +1,17 @@
-﻿/*----------------------------------------------------------------
+﻿/*--------------------------------------------------------------------
 |   Testing E9M22 routines;
-| ----------------------------------------------------------------
+| --------------------------------------------------------------------
 |	pere.millan@urv.cat
 |	santiago.romani@urv.cat
 |	(Març 2021-2025, Febrer-Març 2026)
-| ----------------------------------------------------------------
+| --------------------------------------------------------------------
 |	Programador/a 1: xxx.xxx@estudiants.urv.cat
 |	Programador/a 2: yyy.yyy@estudiants.urv.cat
-|-----------------------------------------------------------------*/
+| --------------------------------------------------------------------
+| © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
+| Ús exclusiu dins l’assignatura; prohibida la seva redistribució.
+| Consulteu la llicència: ACADEMIC_LICENSE_URV_FC.txt
+|---------------------------------------------------------------------*/
 
 #include "E9M22.h"	/* E9M22: tipus Coma Flotant E9M22, 
 					   operacions, valors.
@@ -1379,6 +1383,14 @@ int main(void)
 /* TESTING POINT: check if all percentages of OK tests 
                   are greater than 70% required
 				  to deliver the FC practice.
+    (gdb) p perc_ok_class 
+    (gdb) p perc_ok_is_norm 
+    (gdb) p perc_ok_is_dnorm 
+    (gdb) p perc_ok_is_zero 
+    (gdb) p perc_ok_is_inf 
+    (gdb) p perc_ok_is_nan 
+    (gdb) p perc_ok_is_finit 
+    (gdb) p perc_ok_is_neg 
     (gdb) p perc_ok_e2f
     (gdb) p perc_ok_f2e
     (gdb) p perc_ok_e2i
@@ -1387,15 +1399,11 @@ int main(void)
     (gdb) p perc_ok_sub
     (gdb) p perc_ok_mul
     (gdb) p perc_ok_div
+    (gdb) p perc_ok_inv
     (gdb) p perc_ok_neg
     (gdb) p perc_ok_abs
-    (gdb) p perc_ok_eq
-    (gdb) p perc_ok_ne
-    (gdb) p perc_ok_unordered
-    (gdb) p perc_ok_gt
-    (gdb) p perc_ok_ge
-    (gdb) p perc_ok_lt
-    (gdb) p perc_ok_le
+    (gdb) p perc_ok_cmp
+    (gdb) p perc_ok_decomp
 */
 
 /* BREAKPOINT */

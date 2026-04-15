@@ -1,10 +1,14 @@
-@;----------------------------------------------------------------
+@;--------------------------------------------------------------------
 @;  Declaració de constants GAS per al tractament de dades 
 @;	en format Coma Flotant E9M22.
-@;----------------------------------------------------------------
+@;--------------------------------------------------------------------
 @;	pere.millan@urv.cat
 @;	(Febrer-Març 2025, Març 2026)
-@;----------------------------------------------------------------
+@;--------------------------------------------------------------------
+@; © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
+@; Ús exclusiu dins l’assignatura; prohibida la seva redistribució.
+@; Consulteu la llicència: ACADEMIC_LICENSE_URV_FC.txt
+@;---------------------------------------------------------------------
 
 .include "E9M22_impl.i"
 

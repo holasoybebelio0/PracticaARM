@@ -1,13 +1,17 @@
-﻿/*-----------------------------------------------------------------
+﻿/*---------------------------------------------------------------------
 |   Selecció implementació (C/ARM) rutines de coma flotant E9M22.
 |	HA DE COINCIDIR amb el seleccionat a E9M22_impl.i.
-| -----------------------------------------------------------------
+| ---------------------------------------------------------------------
 |	pere.millan@urv.cat
 |	(Març 2025, Febrer-Març 2026)
-| ----------------------------------------------------------------
+| --------------------------------------------------------------------
 |	Programador/a 1: xxx.xxx@estudiants.urv.cat
 |	Programador/a 2: yyy.yyy@estudiants.urv.cat
-|-----------------------------------------------------------------*/
+| --------------------------------------------------------------------
+| © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
+| Ús exclusiu dins l’assignatura; prohibida la seva redistribució.
+| Consulteu la llicència: ACADEMIC_LICENSE_URV_FC.txt
+|---------------------------------------------------------------------*/
 
 
 #ifndef E9M22_IMPL_H

@@ -5,6 +5,10 @@
 @;	Autor: Pere Millán (DEIM, URV)
 @;	Data:  Març/2025, Febrer/2026 
 @;-----------------------------------------------------------------------
+@; © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
+@; Ús exclusiu dins l’assignatura; prohibida la seva redistribució.
+@; Consulteu la llicència: ACADEMIC_LICENSE_URV_FC.txt
+@;-----------------------------------------------------------------------
 
 .include "E9M22.i"
 

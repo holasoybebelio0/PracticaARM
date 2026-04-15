@@ -4,6 +4,10 @@
 @;	pere.millan@urv.cat
 @;	santiago.romani@urv.cat
 @;	(Abril 2021, Març 2025)
+@;--------------------------------------------------------------------
+@; © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
+@; Ús exclusiu dins l’assignatura; prohibida la seva redistribució.
+@; Consulteu la llicència: ACADEMIC_LICENSE_URV_FC.txt
 @;---------------------------------------------------------------------
 
 

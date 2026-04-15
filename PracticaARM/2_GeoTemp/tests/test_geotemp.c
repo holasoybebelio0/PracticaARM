@@ -1,10 +1,14 @@
-﻿/*----------------------------------------------------------------
+﻿/*-------------------------------------------------------------------
 |   Testing temperature data processing;
-| ----------------------------------------------------------------
+| -------------------------------------------------------------------
 |	santiago.romani@urv.cat
 |	pere.millan@urv.cat
 |	(April 2021, March 2022-2025, March 2026)
-| ----------------------------------------------------------------*/
+| -------------------------------------------------------------------
+| © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
+| Ús exclusiu dins l’assignatura; prohibida la seva redistribució.
+| Consulteu la llicència: ACADEMIC_LICENSE_URV_FC.txt
+| -------------------------------------------------------------------*/
 
 #include "E9M22.h"				/* external declarations of types, defines and
                                    macro for dealing with E9M22 numbers */

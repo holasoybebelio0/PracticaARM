@@ -1,10 +1,14 @@
-﻿/*-----------------------------------------------------------------
+﻿/*-------------------------------------------------------------------
 |   Declaració de tipus, màscares, operacions i macro del format
 |	Coma Flotant E9M22 (bits: 1 signe, 9 exponent, 22 mantissa.
-| -----------------------------------------------------------------
+| -------------------------------------------------------------------
 |	pere.millan@urv.cat
 |	(Febrer-Març 2025, Febrer 2026)
-| ----------------------------------------------------------------*/
+| -------------------------------------------------------------------
+| © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
+| Ús exclusiu dins l’assignatura; prohibida la seva redistribució.
+| Consulteu la llicència: ACADEMIC_LICENSE_URV_FC.txt
+| -------------------------------------------------------------------*/
 
 #ifndef E9M22_H
 #define E9M22_H
@@ -300,7 +304,7 @@ extern e9m22_class_t e9m22_decompose_c_(
 					e9m22_t num,			// Número E9M22 a descomposar
 					unsigned int *sign_out,	// adreça on desar el signe (al MSB)
 					signed short *exp_out,	// adreça on desar l'exponent real (sense excès)
-					unsigned int *mant_out	// adreça on desar la mantisa (amb 1, implícit)
+					unsigned int *mant_out	// adreça on desar la mantissa (amb 1, implícit)
 						// (si alguna adreça és 0/NULL, no s'escriu aquell component)
 		);
 		/* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

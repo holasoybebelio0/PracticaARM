@@ -1,13 +1,17 @@
-﻿/*----------------------------------------------------------------
+﻿/*-------------------------------------------------------------------
 |   "avgmaxmintemp.c": rutines de càlcul de valors mitjans, màxims
 |	i mínims d'una taula de temperatures, expressades en graus
 |	Celsius o Fahrenheit, en format de coma flotant E9M22.
 |	Implementació cridant rutines aritmètiques libE9M22.
-| ----------------------------------------------------------------
+| -------------------------------------------------------------------
 |	santiago.romani@urv.cat
 |	pere.millan@urv.cat
 |	(Febrer-Març 2025, Febrer 2026)
-| ----------------------------------------------------------------*/
+| -------------------------------------------------------------------
+| © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
+| Ús exclusiu dins l’assignatura; prohibida la seva redistribució.
+| Consulteu la llicència: ACADEMIC_LICENSE_URV_FC.txt
+| -------------------------------------------------------------------*/
 
 #include "E9M22.h"				/* Tipus Coma Flotant E9M22 i operacions */
 #include "CelsiusFahrenheit.h"	/* rutines de conversió C->F i F->C */

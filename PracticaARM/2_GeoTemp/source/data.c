@@ -1,15 +1,19 @@
-﻿/*-----------------------------------------------------------------------
+﻿/*---------------------------------------------------------------------------
 |   "geotempData.c":
 |		Dades per a ser processades per les rutines definides en
 |	"avgmaxmintemp.c", a partir de taules que contenen valors de
 |	temperatura per a diferents ciutats del món durant els 12 mesos
 |	de l'any.
 |	Font: https://en.wikipedia.org/wiki/List_of_cities_by_average_temperature
-|------------------------------------------------------------------------
+|----------------------------------------------------------------------------
 |	santiago.romani@urv.cat
 |	pere.millan@urv.cat
 |	(Març 2021-2024, Març 2025, Febrer 2026)
-| -----------------------------------------------------------------------*/
+| ---------------------------------------------------------------------------
+| © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
+| Ús exclusiu dins l’assignatura; prohibida la seva redistribució.
+| Consulteu la llicència: ACADEMIC_LICENSE_URV_FC.txt
+| ---------------------------------------------------------------------------*/
 
 #include "E9M22.h"				/* Tipus Coma Flotant E9M22 i operacions */
 #include "geotemp.h"			/* cityinfo_t: tipus amb info. de ciutat */

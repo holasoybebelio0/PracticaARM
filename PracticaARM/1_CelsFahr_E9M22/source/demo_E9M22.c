@@ -6,6 +6,10 @@
 |------------------------------------------------------------------------
 |	Author: Santiago Romaní, Pere Millán (DEIM, URV)
 |	Date:   Apr/2021, Mar/2022-2024, Feb-Mar/2025, February/2026 
+| -----------------------------------------------------------------------
+| © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
+| Ús exclusiu dins l’assignatura; prohibida la seva redistribució.
+| Consulteu la llicència: ACADEMIC_LICENSE_URV_FC.txt
 | -----------------------------------------------------------------------*/
 
 #include "E9M22.h"	/* external declarations of types, defines, macros

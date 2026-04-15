@@ -1,6 +1,6 @@
 ﻿# FC2026: PracticaARM
 ## Pràctica llenguatge màquina ARM i assemblador GAS
-Ver. 26.1.2, 8/mar/2026
+Ver. 26.2.0, 16/mar/2026
 
 Fitxers per a la pràctica ARM/GAS de *Fonaments de Computadors* (1a i 2a convocatòria).
 Temperatures en coma flotant (E9M22). 
@@ -17,6 +17,7 @@ Temperatures en coma flotant (E9M22).
 - `2_GeoTemp`: fase 2; accés a taules multicamps de temperatures (ciutats, 12 mesos); càlcul de temperatures màximes, mínimes, mitjanes.
 
 ## Versions
+- 26.2.0 (16/mar/2026): 4a versió 2026. Afegida llicència acadèmica i alguna petita correcció.
 - 26.1.2 (08/mar/2026): 3a versió 2026. Correccions a les capçaleres d'alguns fitxers de codi font.
 - 26.1.1 (08/mar/2026): 2a versió 2026. Petites correccions.
 - 26.1.0 (07/mar/2026): 1a versió 2026. Adaptacions 2025»2026 i noves rutines classify/inv/compare/decompose. Fases 1 i 2 completes.

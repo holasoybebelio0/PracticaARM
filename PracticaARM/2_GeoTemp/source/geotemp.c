@@ -9,6 +9,10 @@
 |	santiago.romani@urv.cat
 |	pere.millan@urv.cat
 |	(Abril 2021, Març 2022-2024, Març 2025, Febrer 2026)
+| -----------------------------------------------------------------------
+| © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
+| Ús exclusiu dins l’assignatura; prohibida la seva redistribució.
+| Consulteu la llicència: ACADEMIC_LICENSE_URV_FC.txt
 | -----------------------------------------------------------------------*/
 
 #include "E9M22.h"				/* Tipus Coma Flotant E9M22 i operacions */
