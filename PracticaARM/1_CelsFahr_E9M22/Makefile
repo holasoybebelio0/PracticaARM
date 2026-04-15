@@ -39,11 +39,12 @@ demo_E9M22.elf : build/demo_E9M22.o libE9M22.a
 					libE9M22.a p_lib/libfoncompus.a -o demo_E9M22.elf
 
 
-build/demo_CelsFahr.o: source/demo_CelsFahr.s 
-	$(warning Regla incompleta: build/demo_CelsFahr.o)
+build/demo_CelsFahr.o: source/demo_CelsFahr.s include/CelsiusFahrenheit.h include/divmod.h 
+	arm-none-eabi-gcc $(CCFLAGS) -c source/demo_CelsFahr.s -o build/demo_CelsFahr.o
 
 demo_CelsFahr.elf : build/demo_CelsFahr.o 
-	$(warning Regla incompleta: demo_CelsFahr.elf)
+	arm-none-eabi-ld $(LDFLAGS) build/demo_CelsFahr.o p_lib/startup.o \
+					p_lib/libfoncompus.a -o demo_CelsFahr.elf
 
 
 build/CelsiusFahrenheit_c.o : source/CelsiusFahrenheit_c.c include/E9M22.h include/E9M22_impl.h
@@ -81,12 +82,13 @@ build/test_CelsiusFahrenheit.o : tests/test_CelsiusFahrenheit.c include/E9M22.h 
 
 
 test_E9M22.elf : build/test_E9M22.o libE9M22.a
-	$(warning Regla incompleta: test_E9M22.elf)
+	arm-none-eabi-ld $(LDFLAGS) build/test_E9M22.o p_lib/startup.o \
+									libE9M22.a p_lib/libfoncompus.a -o test_E9M22.elf
+	
 
 
 build/test_E9M22.o : tests/test_E9M22.c include/E9M22_impl.h
-	$(warning Regla incompleta: build/test_E9M22.o)
-
+	arm-none-eabi-gcc $(CCFLAGS) -c tests/test_E9M22.c -o build/test_E9M22.o
 
 
 #-------------------------------------------------------------------------------
