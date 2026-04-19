@@ -88,11 +88,11 @@
 #define e9m22_inv	e9m22_inv_c_	// Versió en C
 //#define e9m22_inv	e9m22_inv_s	// Versió assemblador
 
-#define e9m22_neg	e9m22_neg_c_	// Versió en C
-//#define e9m22_neg	e9m22_neg_s	// Versió assemblador
+//#define e9m22_neg	e9m22_neg_c_	// Versió en C
+#define e9m22_neg	e9m22_neg_s	// Versió assemblador
 
-#define e9m22_abs	e9m22_abs_c_	// Versió en C
-//#define e9m22_abs	e9m22_abs_s	// Versió assemblador
+//#define e9m22_abs	e9m22_abs_c_	// Versió en C
+#define e9m22_abs	e9m22_abs_s	// Versió assemblador
 
 
 /*************************************************************/

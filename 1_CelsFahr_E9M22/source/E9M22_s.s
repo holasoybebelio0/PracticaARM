@@ -96,8 +96,8 @@ e9m22_is_denormal_s:
 				@; r0: ...
 		push {lr}
 
-		ldr r1, =EM922_MASK_EXP
-
+		ldr r1, =E9M22_MASK_EXP
+		
 
 		mov r0, #0		@; to-do: sempre fals per indicar rutina pendent
 		
@@ -307,32 +307,6 @@ int_to_e9m22_s:
 E9M22_add_s:
 	push {r1-r10,lr}          @; Guarda en pila los registros que se usarán (r1 a r10 y el retorno)
 
-	ldr r2, =E9M22_MASK_EXP    @;mascara per extraure exp
-	and r3, r0, r2            @; extreiem l'exp de num1
-	cmp r3, r2                @; comproba si aquest exp es especial
-	beq infinito             @; si es equal (beq) pasem a tractar infinit
-
-	and r4, r1, r2            @; Extreiem exp num2
-	cmp r4, r2                @; comproba si aquest exp es especial
-	beq infinito             
-
-	ldr r3, =E9M22_MASK_FRAC   @; mascara per extraure la part frac
-	orr r4, r2, r3            @; r4 = máscara per detectar valor 0 (exponent + fraccio tot 0)
-	tst r0, r4                @; ¿num1 == 0?
-	moveq r0, r1             @; Si num1 es 0, el resultat es num2
-	beq fi
-
-	tst r1, r4                @; ¿num2 == 0?
-	beq fi                   @; Si num2 es 0 el resultat es r0 o num1
-
-	tst r0, r2                
-	beq comprobar_denormal   
-	b extraer_componentes   
-
-comprobar_denormal:
-	
-
-extraer_componentes:
 	
 
 		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
@@ -354,7 +328,7 @@ extraer_componentes:
 e9m22_sub_s:
 				@; ús de registres:
 				@; r0: ...
-		push {lr}
+		push {lr-}
 
 		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
 		
@@ -435,13 +409,21 @@ e9m22_inv_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_neg_s
 e9m22_neg_s:
-				@; ús de registres:
-				@; r0: ...
-		push {lr}
-
-		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
+			push {r1, lr}            
+	ldr r1, =E9M22_ZERO_NEG	@;mascara signe
+		ldr r1, [r1]			@;Carreguem valor a r1	
+ 
+    beq negar
+		eor r0, r0, r1
+		b fin
 		
-		pop {pc}
+		
+		
+negar:
+		orr r0, r0, r1
+fin:
+		
+		pop {r1, pc}
 
 
 
@@ -455,13 +437,17 @@ e9m22_neg_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_abs_s
 e9m22_abs_s:
-				@; ús de registres:
-				@; r0: ...
-		push {lr}
+		e9m22_abs_s:
+	push    {r1, lr}                
+	
+	ldr r1, =E9M22_MASK_SIGN  
+    ldr r1, [r1]    
+    tst r0, r1              
+    beq final                
+    bic r0, r0, r1         @;desactiva el bit de signo  
 
-		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
-		
-		pop {pc}
+final:
+    pop     {r1, lr}
 
 
 
