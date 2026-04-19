@@ -4,7 +4,7 @@
 # Date: April 2021, March 2022-2024, February-March 2025
 #-------------------------------------------------------------------------------
 #	Programador/a 1: evelio.ruiz@estudiants.urv.cat
-#	Programador/a 2: yyy.yyy@estudiants.urv.cat
+#	Programador/a 2: pau.yyy@estudiants.urv.cat
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
@@ -19,8 +19,8 @@ LDFLAGS := -z max-page-size=0x8000
 #-------------------------------------------------------------------------------
 # make commands
 #-------------------------------------------------------------------------------
-tota_1a_part_practica_FC : libE9M22.a demo_pi.elf demo_CelsFahr.elf demo_E9M22.elf \ 
-								test_CelsiusFahrenheit.elf test_E9M22.elf 
+tota_1a_part_practica_FC : libE9M22.a demo_pi.elf demo_CelsFahr.elf demo_E9M22.elf \
+							test_CelsiusFahrenheit.elf test_E9M22.elf
 
 
 build/demo_pi.o: source/demo_pi.s include/E9M22.i include/E9M22_impl.i
@@ -104,8 +104,8 @@ clean :
 # run commands
 #-----------------------------------------------------------------------------
 run : demo_pi.elf	demo_CelsFahr.elf	demo_E9M22.elf
-	arm-eabi-insight demo_pi.elf &
-	arm-eabi-insight demo_CelsFahr.elf &
+	#arm-eabi-insight demo_pi.elf &
+	#arm-eabi-insight demo_CelsFahr.elf &
 	arm-eabi-insight demo_E9M22.elf &
 
 
@@ -113,5 +113,5 @@ run : demo_pi.elf	demo_CelsFahr.elf	demo_E9M22.elf
 # debug commands
 #-----------------------------------------------------------------------------
 debug : test_CelsiusFahrenheit.elf	test_E9M22.elf 
-	arm-eabi-insight test_CelsiusFahrenheit.elf &
+	#arm-eabi-insight test_CelsiusFahrenheit.elf &
 	arm-eabi-insight test_E9M22.elf &

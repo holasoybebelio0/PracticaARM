@@ -57,11 +57,26 @@ e9m22_classify_s:
 	.global e9m22_is_normal_s
 e9m22_is_normal_s:
 				@; ús de registres:
-				@; r0: ...
+				@; r0: valor a detectar si és normal
+				@; r1: valor de la màscara EM922_MASK_EXP
+				@; r2: valor de exponent
 		push {lr}
+		ldr r1, =E9M22_MASK_EXP @; carreguem la màscara a R1 
+		and r2, r0, r1 @; exponent = num & EM922_MASK_EXP assignat a R2
 
-		mov r0, #0		@; to-do: sempre fals per indicar rutina pendent
-		
+		cmp r2, #0 @; si exponent == 0 no és normal
+		beq _fals 
+
+		cmp r2, r1 @; si exponent == tot 1s tampoc és normal  
+		beq _fals
+
+		ldr r0, =0xFC2026 @; si és normal, assignem valor resultat a r0
+		b _fin @; acabem
+
+	_fals: 
+		mov r0, #0 @; assignem valor 0 a resultat
+	
+	_fin:
 		pop {pc}
 
 
@@ -80,6 +95,9 @@ e9m22_is_denormal_s:
 				@; ús de registres:
 				@; r0: ...
 		push {lr}
+
+		ldr r1, =EM922_MASK_EXP
+
 
 		mov r0, #0		@; to-do: sempre fals per indicar rutina pendent
 		
