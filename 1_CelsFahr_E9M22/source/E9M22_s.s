@@ -6,7 +6,7 @@
 @;	(Març 2021-2023, Febrer 2024, Març 2025, Març 2026)
 @;-----------------------------------------------------------------------
 @;	Programador/a 1: evelio.ruiz@estudiants.urv.cat
-@;	Programador/a 2: yyy.yyy@estudiants.urv.cat
+@;	Programador/a 2: pau.gutierrez@estudiants.urv.cat
 @;-----------------------------------------------------------------------
 @; © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
 @; Ús exclusiu dins l’assignatura; prohibida la seva redistribució.
@@ -36,8 +36,23 @@ FLOAT_sNAN	=	0x7FA00000	@; Un possible NaN (signaling) en binary32
 	.global e9m22_classify_s
 e9m22_classify_s:
 				@; ús de registres:
-				@; r0: ...
+				@; r0: valor a classificar
+				@; r1: màscara E9M22_MASK_EXP
+				@; r2: exponent
 		push {lr}
+
+		ldr r1, =E9M22_MASK_EXP
+		
+		and r2, r0, r1 @; exponent
+		
+		cmp r2, #0
+		beq _else_classify @; if ( (exponent != 0) && (exponent != E9M22_MASK_EXP) )
+		cmp r2, r1
+		beq _else_classify
+
+		mov r0, #
+
+
 
 		mov r0, #E9M22_CLASS_NAN	@; to-do: Classe NaN per indicar rutina pendent
 		
@@ -60,23 +75,26 @@ e9m22_is_normal_s:
 				@; r0: valor a detectar si és normal
 				@; r1: valor de la màscara EM922_MASK_EXP
 				@; r2: valor de exponent
+
 		push {lr}
 		ldr r1, =E9M22_MASK_EXP @; carreguem la màscara a R1 
+
 		and r2, r0, r1 @; exponent = num & EM922_MASK_EXP assignat a R2
 
-		cmp r2, #0 @; si exponent == 0 no és normal
-		beq _fals 
+		cmp r2, #0 		@ Si exponente == 0 -> no es normal
+		beq _fals_if_is_normal
+		
+		cmp r2, r1 		@ Si exponente == todos 1s -> no es normal
+		beq _fals_if_is_normal
 
-		cmp r2, r1 @; si exponent == tot 1s tampoc és normal  
-		beq _fals
+		ldr r0, =0xFC2026	@ Sí es normal (Retornar True / Valor != 0)
+		b _fin_is_normal
+		
 
-		ldr r0, =0xFC2026 @; si és normal, assignem valor resultat a r0
-		b _fin @; acabem
-
-	_fals: 
+	_fals_if_is_normal: 
 		mov r0, #0 @; assignem valor 0 a resultat
 	
-	_fin:
+	_fin_is_normal:
 		pop {pc}
 
 
@@ -93,14 +111,30 @@ e9m22_is_normal_s:
 	.global e9m22_is_denormal_s
 e9m22_is_denormal_s:
 				@; ús de registres:
-				@; r0: ...
+				@; r0: valor a detectar si és DENORMAL
+				@; r1: valor amb la màscara E9M22_MASK_EXP
+				@; r2: exponent
+				@; r3: mantissa
+
 		push {lr}
 
-		ldr r1, =EM922_MASK_EXP
+		ldr r1, =E9M22_MASK_EXP @; carreguem la màscara a r1
+		and r2, r0, r1 @; operació exponent assignada a r2
+		mov r3, r2 @; operació de mantissa assignada a r3
 
+		cmp r2, #0 
+		bne _fals_if_is_denormal @; si exponent != 0, fals
 
-		mov r0, #0		@; to-do: sempre fals per indicar rutina pendent
-		
+		cmp r3, #0
+		beq _fals_if_is_denormal @; si mantissa == 0, fals
+
+		ldr r0, =0xFC2026 @; el valor sí es DENORMAL
+		b _fin_is_denormal
+
+	_fals_if_is_denormal:
+		mov r0, #0 @; assignem 0 a resultat
+	
+	_fin_is_denormal:
 		pop {pc}
 
 
@@ -117,11 +151,33 @@ e9m22_is_denormal_s:
 	.global e9m22_is_zero_s
 e9m22_is_zero_s:
 				@; ús de registres:
-				@; r0: ...
+				@; r0: valor a detectar si és de classe ZERO
+				@; r1: valor amb la màscara E9M22_MASK_EXP
+				@; r2: valor amb la màscara E9M22_MASK_FRAC
+				@; r3: exponent
+				@; r4: mantissa
+
 		push {lr}
 
-		mov r0, #0		@; to-do: sempre fals per indicar rutina pendent
-		
+		ldr r1, =E9M22_MASK_EXP
+		ldr r2, =E9M22_MASK_FRAC
+
+		and r3, r0, r1 @; exponent = num & E9M22_MASK_EXP
+		and r4, r0, r2 @; mantissa = "" & E9M22_MASK_FRAC
+
+		cmp r3, #0 @; si exponent != 0, fals
+		bne _fals_if_is_zero 
+
+		cmp r4, #0 @; si mantissa != 0, fals
+		bne _fals_if_is_zero
+
+		ldr r0, =0xFC2026 @; carreguem el valor a resultat si és classe ZERO
+		b _fin_is_zero
+
+	_fals_if_is_zero:
+		mov r0, #0 @; valor de resultat si no és classe ZERO
+	
+	_fin_is_zero:
 		pop {pc}
 
 
@@ -138,11 +194,33 @@ e9m22_is_zero_s:
 	.global e9m22_is_infinite_s
 e9m22_is_infinite_s:
 				@; ús de registres:
-				@; r0: ...
+				@; r0: valor E9M22 a detectar si es INFINIT
+				@; r1: màscara E9M22_MASK_EXP
+				@; r2: màscara E9M22_MASK_FRAC
+				@; r3: exponent
+				@; r4: mantissa
+
 		push {lr}
 
-		mov r0, #0		@; to-do: sempre fals per indicar rutina pendent
-		
+		ldr r1, =E9M22_MASK_EXP 
+		ldr r2, =E9M22_MASK_FRAC
+
+		and r3, r0, r1 @; exponent 
+		and r4, r0, r2 @; mantissa
+
+		cmp r3, r1 @; si exponent != E9M22_MASK_EXP, fals
+		bne _fals_if_is_infinite
+
+		cmp r4, #0 @; o si mantissa != 0, fals
+		bne _fals_if_is_infinite
+
+		ldr r0, =0xFC2026 @; es infinit
+		b _fin_is_infinite
+
+	_fals_if_is_infinite:
+		mov r0, #0 @; no es infinit, valor 0 a resultat
+	
+	_fin_is_infinite:
 		pop {pc}
 
 
@@ -159,11 +237,32 @@ e9m22_is_infinite_s:
 	.global e9m22_is_nan_s
 e9m22_is_nan_s:
 				@; ús de registres:
-				@; r0: ...
-		push {lr}
+				@; r0: valor E9M22 a detectar si és classe NAN
+				@; r1: màscara E9M22_MASK_EXP
+				@; r2: màscara E9M22_MASK_FRAC
+				@; r3: exponent
+				@; r4: mantissa
 
-		mov r0, #0xFC	@; to-do: sempre cert per indicar rutina pendent
-		
+		push {lr}
+		ldr r1, =E9M22_MASK_EXP
+		ldr r2, =E9M22_MASK_FRAC
+
+		and r3, r0, r1 @; exponent
+		and r4, r0, r2 @; mantissa
+
+		cmp r3, r1	@; si exponent != E9M22_MASK_EXP, fals
+		bne _fals_if_is_nan
+
+		cmp r4, #0 @; si mantissa == 0, fals
+		beq _fals_if_is_nan
+
+		ldr r0, =0xFC2026 @; si es NaN
+		b _fin_is_nan
+	
+	_fals_if_is_nan:
+		mov r0, #0 @; no es NaN, valor de resultat 0
+
+	_fin_is_nan:	
 		pop {pc}
 
 
@@ -180,11 +279,25 @@ e9m22_is_nan_s:
 	.global e9m22_is_finite_s
 e9m22_is_finite_s:
 				@; ús de registres:
-				@; r0: ...
+				@; r0: valor E9M22 a detectar si és d'alguna classe FINITA
+				@; r1: màscara E9M22_MASK_EXP
+				@; r2: exponent
+			
 		push {lr}
 
-		mov r0, #0		@; to-do: sempre fals per indicar rutina pendent
+		ldr r1, =E9M22_MASK_EXP
 		
+		and r2, r0, r1
+		cmp r2, r1
+		beq _fals_if_is_finite
+
+		ldr r1, =0xFC2026
+		b _fin_is_finite 
+	
+	_fals_if_is_finite: 
+		mov r0, #0
+	
+	_fin_is_finite:
 		pop {pc}
 
 
@@ -200,11 +313,26 @@ e9m22_is_finite_s:
 	.global e9m22_is_negative_s
 e9m22_is_negative_s:
 				@; ús de registres:
-				@; r0: ...
+				@; r0: valor E9M22 a detectar si és negatiu
+				@; r1: màscara E9M22_MASK_SIGN
+				@; r2: signe
+
 		push {lr}
 
-		mov r0, #0		@; to-do: sempre fals per indicar rutina pendent
+		ldr r1, =E9M22_MASK_SIGN @; carreguem la màscara a r1
+
+		and r2, r0, r1 @; signe
 		
+		cmp r2, r1 @; si no és negatiu, fals 
+		bne fals_if_is_negative
+
+		ldr r0, =0xFC2026 @; és negatiu
+		b _fin_is_negative
+
+	_fals_if_is_negative:
+		mov r0, #0 @; no és negatiu
+	
+	_fin_is_negative:
 		pop {pc}
 
 
@@ -307,32 +435,6 @@ int_to_e9m22_s:
 E9M22_add_s:
 	push {r1-r10,lr}          @; Guarda en pila los registros que se usarán (r1 a r10 y el retorno)
 
-	ldr r2, =E9M22_MASK_EXP    @;mascara per extraure exp
-	and r3, r0, r2            @; extreiem l'exp de num1
-	cmp r3, r2                @; comproba si aquest exp es especial
-	beq infinito             @; si es equal (beq) pasem a tractar infinit
-
-	and r4, r1, r2            @; Extreiem exp num2
-	cmp r4, r2                @; comproba si aquest exp es especial
-	beq infinito             
-
-	ldr r3, =E9M22_MASK_FRAC   @; mascara per extraure la part frac
-	orr r4, r2, r3            @; r4 = máscara per detectar valor 0 (exponent + fraccio tot 0)
-	tst r0, r4                @; ¿num1 == 0?
-	moveq r0, r1             @; Si num1 es 0, el resultat es num2
-	beq fi
-
-	tst r1, r4                @; ¿num2 == 0?
-	beq fi                   @; Si num2 es 0 el resultat es r0 o num1
-
-	tst r0, r2                
-	beq comprobar_denormal   
-	b extraer_componentes   
-
-comprobar_denormal:
-	
-
-extraer_componentes:
 	
 
 		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
