@@ -37,27 +37,55 @@ FLOAT_sNAN	=	0x7FA00000	@; Un possible NaN (signaling) en binary32
 e9m22_classify_s:
 				@; ús de registres:
 				@; r0: valor a classificar
-				@; r1: màscara E9M22_MASK_EXP
+				@; r1: màscara E9M22_MASK_EXP (i posteriorment a E9M22_MASK_FRAC)
 				@; r2: exponent
-		push {lr}
+				@; r3: mantissa
+	push {lr}
 
-		ldr r1, =E9M22_MASK_EXP
+	ldr r1, =E9M22_MASK_EXP
+	
+	and r2, r0, r1 @; exponent
 		
-		and r2, r0, r1 @; exponent
-		
-		cmp r2, #0
-		beq _else_classify @; if ( (exponent != 0) && (exponent != E9M22_MASK_EXP) )
-		cmp r2, r1
-		beq _else_classify
+	cmp r2, #0
+	beq L_else_classify @; if ( (exponent != 0) && (exponent != E9M22_MASK_EXP) )
+	cmp r2, r1 
+	beq L_else_classify
 
-		mov r0, #
+		@; ÉS NORMAL: 
+	mov r0, #E9M22_CLASS_NORMAL 
+	b L_fin_classify
 
+L_else_classify:
+		ldr r1, =E9M22_MASK_FRAC @; ara utilitzarem l'altre màscara (no cal l'altre)
+		and r3, r0, r1 @; mantissa
 
+		cmp r2, #0 @; if (exponent == 0)
+		bne L_classify_inf_nan @; Pot ser infinit o NaN
 
-		mov r0, #E9M22_CLASS_NAN	@; to-do: Classe NaN per indicar rutina pendent
-		
-		pop {pc}
+		cmp r3, #0 @; if (mantissa != 0)
+		beq L_classify_class_zero @; És de la classe ZERO
 
+	L_classify_class_denormal: 
+		@; si no és de la classe ZERO seguirà per aqui el codi: 
+		@; ÉS DENORMAL
+		mov r0, #E9M22_CLASS_DENORMAL
+		b L_fin_classify
+	L_classify_inf_nan:
+		cmp r3, #0
+		bne L_classify_class_nan @; si (mantissa != 0) és NaN
+
+		@; ÉS INFINIT
+		mov r0, #E9M22_CLASS_INFINITE
+		b L_fin_classify
+
+	L_classify_class_nan:
+		mov r0, #E9M22_CLASS_NAN @; ÉS NaN
+		b L_fin_classify
+	L_classify_class_zero: 
+		mov r0, #E9M22_CLASS_ZERO @; ÉS ZERO
+		b L_fin_classify
+L_fin_classify:
+	pop {pc}
 
 
 @;-----------------------------------------------------------------------
@@ -324,7 +352,7 @@ e9m22_is_negative_s:
 		and r2, r0, r1 @; signe
 		
 		cmp r2, r1 @; si no és negatiu, fals 
-		bne fals_if_is_negative
+		bne _fals_if_is_negative
 
 		ldr r0, =0xFC2026 @; és negatiu
 		b _fin_is_negative
