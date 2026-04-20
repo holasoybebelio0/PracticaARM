@@ -82,8 +82,8 @@
 #define e9m22_mul	e9m22_mul_c_	// Versió en C
 //#define e9m22_mul	e9m22_mul_s	// Versió assemblador
 
-#define e9m22_div	e9m22_div_c_	// Versió en C
-//#define e9m22_div	e9m22_div_s	// Versió assemblador
+//#define e9m22_div	e9m22_div_c_	// Versió en C
+#define e9m22_div	e9m22_div_s	// Versió assemblador
 
 #define e9m22_inv	e9m22_inv_c_	// Versió en C
 //#define e9m22_inv	e9m22_inv_s	// Versió assemblador

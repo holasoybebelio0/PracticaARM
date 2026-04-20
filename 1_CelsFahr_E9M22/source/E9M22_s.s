@@ -46,11 +46,11 @@ e9m22_classify_s:
 		and r2, r0, r1 @; exponent
 		
 		cmp r2, #0
-		beq _else_classify @; if ( (exponent != 0) && (exponent != E9M22_MASK_EXP) )
+@;		beq _else_classify @; if ( (exponent != 0) && (exponent != E9M22_MASK_EXP) )
 		cmp r2, r1
-		beq _else_classify
+@;		beq _else_classify
 
-		mov r0, #
+@;		mov r0, #
 
 
 
@@ -324,7 +324,7 @@ e9m22_is_negative_s:
 		and r2, r0, r1 @; signe
 		
 		cmp r2, r1 @; si no és negatiu, fals 
-		bne fals_if_is_negative
+@;		bne fals_if_is_negative
 
 		ldr r0, =0xFC2026 @; és negatiu
 		b _fin_is_negative
@@ -459,12 +459,12 @@ e9m22_sub_s:
     
     mov r4, r0              @; num1 = r4
     mov r0, r1              @; num2 = r0
-    bl e9m22_neg_s          @; R0 = e9m22_neg_s(num2)  resultat=num2(R0) negat
+    bl e9m22_neg_c_       @; R0 = e9m22_neg_s(num2)  resultat=num2(R0) negat
 
     
     mov r1, r0              @; R1 = num2 negat (R0)
     mov r0, r4              @; R0 = num1
-    bl e9m22_add_c         @; R0 = e9m22_add_s(num1, num2negat)
+    bl e9m22_add_c_        @; R0 = e9m22_add_s(num1, num2negat)
 
     
     pop {r4, pc}        
@@ -505,13 +505,21 @@ e9m22_mul_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_div_s
 e9m22_div_s:
-				@; ús de registres:
-				@; r0: ...
-		push {lr}
+    @; Paso 1: Salvar R4 (para preservar num1) y LR (para volver)
+    push {r4, lr}           
 
-		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
-		
-		pop {pc}
+    @; Paso 2: Calcular el inverso del segundo operando: 1 / num2
+    mov r4, r0              @; Guardamos num1 en R4 para que no se pierda
+    mov r0, r1              @; Ponemos num2 en R0 para la función inv
+    bl e9m22_inv_s          @; R0 = e9m22_inv_s(num2) -> resultado: invers2
+
+    @; Paso 3: Realizar la multiplicación: num1 * invers2
+    mov r1, r0              @; Movemos el inverso (resultado de inv) a R1
+    mov r0, r4              @; Recuperamos num1 de R4 y lo ponemos en R0
+    bl e9m22_mul_s          @; R0 = e9m22_mul_s(num1, invers2)
+
+    @; Paso 4: Restaurar registros y retornar
+    pop {r4, pc}
 
 
 
@@ -567,12 +575,16 @@ e9m22_abs_s:
     @; pero lo incluimos para que veas el retorno correcto.
     push {r1, lr}          
 
+    @; 1. Cargamos la máscara del signo (0x80000000)
     ldr r1, =E9M22_MASK_SIGN 
-
+    
+    @; 2. Limpiamos el bit de signo (bit 31) pase lo que pase.
+    @; Si es negativo (1), pasa a positivo (0).
+    @; Si ya es positivo (0), se queda en (0).
     bic r0, r0, r1         
 
-    pop {r1, pc}
-
+    @; 3. RETORNO CORRECTO: Cargamos el valor de LR directamente en PC
+    pop {r1, pc}  
 
 
 @;***********************************************************
