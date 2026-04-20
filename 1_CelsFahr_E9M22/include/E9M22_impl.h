@@ -5,8 +5,8 @@
 |	pere.millan@urv.cat
 |	(Març 2025, Febrer-Març 2026)
 | --------------------------------------------------------------------
-|	Programador/a 1: xxx.xxx@estudiants.urv.cat
-|	Programador/a 2: yyy.yyy@estudiants.urv.cat
+|	Programador/a 1: evelio.ruiz@estudiants.urv.cat
+|	Programador/a 2: pau.gutierrez@estudiants.urv.cat
 | --------------------------------------------------------------------
 | © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
 | Ús exclusiu dins l’assignatura; prohibida la seva redistribució.
@@ -27,8 +27,8 @@
 /* Rutines de CLASSIFICACIÓ de valors en coma flotant E9M22 */
 /************************************************************/
 
-#define e9m22_classify	e9m22_classify_c_	// Versió en C
-//#define e9m22_classify	e9m22_classify_s	// Versió assemblador
+//#define e9m22_classify	e9m22_classify_c_	// Versió en C
+#define e9m22_classify	e9m22_classify_s	// Versió assemblador
 
 //#define e9m22_is_normal	e9m22_is_normal_c_	// Versió en C
 #define e9m22_is_normal	e9m22_is_normal_s	// Versió assemblador
