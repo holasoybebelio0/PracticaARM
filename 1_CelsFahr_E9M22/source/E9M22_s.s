@@ -456,7 +456,7 @@ E9M22_add_s:
 e9m22_sub_s:
 				@; ús de registres:
 				@; r0: ...
-		push {lr}
+		push {lr-}
 
 		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
 		
@@ -537,13 +537,21 @@ e9m22_inv_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_neg_s
 e9m22_neg_s:
-				@; ús de registres:
-				@; r0: ...
-		push {lr}
-
-		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
+			push {r1, lr}            
+	ldr r1, =E9M22_ZERO_NEG	@;mascara signe
+		ldr r1, [r1]			@;Carreguem valor a r1	
+ 
+    beq negar
+		eor r0, r0, r1
+		b fin
 		
-		pop {pc}
+		
+		
+negar:
+		orr r0, r0, r1
+fin:
+		
+		pop {r1, pc}
 
 
 
@@ -557,13 +565,17 @@ e9m22_neg_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_abs_s
 e9m22_abs_s:
-				@; ús de registres:
-				@; r0: ...
-		push {lr}
+		e9m22_abs_s:
+	push    {r1, lr}                
+	
+	ldr r1, =E9M22_MASK_SIGN  
+    ldr r1, [r1]    
+    tst r0, r1              
+    beq final                
+    bic r0, r0, r1         @;desactiva el bit de signo  
 
-		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
-		
-		pop {pc}
+final:
+    pop     {r1, lr}
 
 
 
