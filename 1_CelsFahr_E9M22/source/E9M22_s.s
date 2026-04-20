@@ -304,7 +304,7 @@ int_to_e9m22_s:
 @;		R0 		-> valor E9M22 de (num1 + num2).
 @;-----------------------------------------------------------------------
 	.global e9m22_add_s
-E9M22_add_s:
+e9m22_add_s:
 	push {r1-r10,lr}          @; Guarda en pila los registros que se usarán (r1 a r10 y el retorno)
 
 	
@@ -326,13 +326,21 @@ E9M22_add_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_sub_s
 e9m22_sub_s:
-				@; ús de registres:
-				@; r0: ...
-		push {lr-}
+    push {r4, lr}          
 
-		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
-		
-		pop {pc}
+    
+    mov r4, r0              @; num1 = r4
+    mov r0, r1              @; num2 = r0
+    bl e9m22_neg_s          @; R0 = e9m22_neg_s(num2)  resultat=num2(R0) negat
+
+    
+    mov r1, r0              @; R1 = num2 negat (R0)
+    mov r0, r4              @; R0 = num1
+    bl e9m22_add_c         @; R0 = e9m22_add_s(num1, num2negat)
+
+    
+    pop {r4, pc}        
+
 
 
 
@@ -409,21 +417,11 @@ e9m22_inv_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_neg_s
 e9m22_neg_s:
-			push {r1, lr}            
-	ldr r1, =E9M22_ZERO_NEG	@;mascara signe
-		ldr r1, [r1]			@;Carreguem valor a r1	
- 
-    beq negar
-		eor r0, r0, r1
-		b fin
+			push {lr}            
+	ldr r1, =E9M22_MASK_SIGN	@;mascara signe
+	eor r0, r0, r1
 		
-		
-		
-negar:
-		orr r0, r0, r1
-fin:
-		
-		pop {r1, pc}
+		pop {pc}
 
 
 
@@ -437,17 +435,15 @@ fin:
 @;-----------------------------------------------------------------------
 	.global e9m22_abs_s
 e9m22_abs_s:
-		e9m22_abs_s:
-	push    {r1, lr}                
-	
-	ldr r1, =E9M22_MASK_SIGN  
-    ldr r1, [r1]    
-    tst r0, r1              
-    beq final                
-    bic r0, r0, r1         @;desactiva el bit de signo  
+    @; No necesitamos preservar R1 si solo vamos a usarlo un momento, 
+    @; pero lo incluimos para que veas el retorno correcto.
+    push {r1, lr}          
 
-final:
-    pop     {r1, lr}
+    ldr r1, =E9M22_MASK_SIGN 
+
+    bic r0, r0, r1         
+
+    pop {r1, pc}
 
 
 
