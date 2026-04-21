@@ -95,8 +95,8 @@ e9m22_abs	=	e9m22_abs_s	@; Versió assemblador
 @;* Operació de COMPARACIÓ de números en Coma Flotant E9M22 *
 @;***********************************************************
 
-e9m22_compare	=	e9m22_compare_c	@; Versió en C
-@;e9m22_compare	=	e9m22_compare_s	@; Versió assemblador
+@;e9m22_compare	=	e9m22_compare_c	@; Versió en C
+e9m22_compare	=	e9m22_compare_s	@; Versió assemblador
 
 
 @;**********************************************************

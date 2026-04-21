@@ -99,8 +99,8 @@
 /* Operacions de COMPARACIÓ de números en Coma Flotant E9M22 */
 /*************************************************************/
 
-#define e9m22_compare	e9m22_compare_c_	// Versió en C
-//#define e9m22_compare	e9m22_compare_s	// Versió assemblador
+//#define e9m22_compare	e9m22_compare_c_	// Versió en C
+#define e9m22_compare	e9m22_compare_s	// Versió assemblador
 
 
 /**********************************************************/
