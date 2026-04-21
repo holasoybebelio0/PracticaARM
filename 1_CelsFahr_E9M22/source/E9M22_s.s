@@ -40,7 +40,7 @@ e9m22_classify_s:
 				@; r1: màscara E9M22_MASK_EXP (i posteriorment a E9M22_MASK_FRAC)
 				@; r2: exponent
 				@; r3: mantissa
-	push {lr}
+	push {r1-r3, lr}
 
 	ldr r1, =E9M22_MASK_EXP
 	
@@ -85,7 +85,7 @@ L_else_classify:
 		mov r0, #E9M22_CLASS_ZERO @; ÉS ZERO
 		b L_fin_classify
 L_fin_classify:
-	pop {pc}
+	pop {r1-r3, pc}
 
 
 @;-----------------------------------------------------------------------
@@ -104,7 +104,7 @@ e9m22_is_normal_s:
 				@; r1: valor de la màscara EM922_MASK_EXP
 				@; r2: valor de exponent
 
-		push {lr}
+		push {r1-r2, lr}
 		ldr r1, =E9M22_MASK_EXP @; carreguem la màscara a R1 
 
 		and r2, r0, r1 @; exponent = num & EM922_MASK_EXP assignat a R2
@@ -123,7 +123,7 @@ e9m22_is_normal_s:
 		mov r0, #0 @; assignem valor 0 a resultat
 	
 	_fin_is_normal:
-		pop {pc}
+		pop {r1-r2, pc}
 
 
 
@@ -144,15 +144,18 @@ e9m22_is_denormal_s:
 				@; r2: exponent
 				@; r3: mantissa
 
-		push {lr}
+		push {r1-r3, lr}
 
 		ldr r1, =E9M22_MASK_EXP @; carreguem la màscara a r1
 		and r2, r0, r1 @; operació exponent assignada a r2
-		mov r3, r2 @; operació de mantissa assignada a r3
+		
 
 		cmp r2, #0 
 		bne _fals_if_is_denormal @; si exponent != 0, fals
-
+		
+		ldr r1, =E9M22_MASK_FRAC @;Carreguem Mascara mantissa
+		and r3, r0, r1			 @;r3 = Mantissa Real
+		
 		cmp r3, #0
 		beq _fals_if_is_denormal @; si mantissa == 0, fals
 
@@ -163,7 +166,7 @@ e9m22_is_denormal_s:
 		mov r0, #0 @; assignem 0 a resultat
 	
 	_fin_is_denormal:
-		pop {pc}
+		pop {r1-r3, pc}
 
 
 
@@ -185,7 +188,7 @@ e9m22_is_zero_s:
 				@; r3: exponent
 				@; r4: mantissa
 
-		push {lr}
+		push {r1-r4, lr}
 
 		ldr r1, =E9M22_MASK_EXP
 		
@@ -208,7 +211,7 @@ e9m22_is_zero_s:
 		mov r0, #0 @; valor de resultat si no és classe ZERO
 	
 	_fin_is_zero:
-		pop {pc}
+		pop {r1-r4, pc}
 
 
 
@@ -230,7 +233,7 @@ e9m22_is_infinite_s:
 				@; r3: exponent
 				@; r4: mantissa
 
-		push {lr}
+		push {r1-r4, lr}
 
 		ldr r1, =E9M22_MASK_EXP 
 		ldr r2, =E9M22_MASK_FRAC
@@ -251,7 +254,7 @@ e9m22_is_infinite_s:
 		mov r0, #0 @; no es infinit, valor 0 a resultat
 	
 	_fin_is_infinite:
-		pop {pc}
+		pop {r1-r4, pc}
 
 
 
@@ -273,7 +276,7 @@ e9m22_is_nan_s:
 				@; r3: exponent
 				@; r4: mantissa
 
-		push {lr}
+		push {r1-r4, lr}
 		ldr r1, =E9M22_MASK_EXP
 		ldr r2, =E9M22_MASK_FRAC
 
@@ -293,7 +296,7 @@ e9m22_is_nan_s:
 		mov r0, #0 @; no es NaN, valor de resultat 0
 
 	_fin_is_nan:	
-		pop {pc}
+		pop {r1-r4, pc}
 
 
 
@@ -313,7 +316,7 @@ e9m22_is_finite_s:
 				@; r1: màscara E9M22_MASK_EXP
 				@; r2: exponent
 			
-		push {lr}
+		push {r1-r2, lr}
 
 		ldr r1, =E9M22_MASK_EXP
 		
@@ -328,7 +331,7 @@ e9m22_is_finite_s:
 		mov r0, #0
 	
 	_fin_is_finite:
-		pop {pc}
+		pop {r1-r2, pc}
 
 
 
@@ -347,7 +350,7 @@ e9m22_is_negative_s:
 				@; r1: màscara E9M22_MASK_SIGN
 				@; r2: signe
 
-		push {lr}
+		push {r1-r2, lr}
 
 		ldr r1, =E9M22_MASK_SIGN @; carreguem la màscara a r1
 
@@ -363,7 +366,7 @@ e9m22_is_negative_s:
 		mov r0, #0 @; no és negatiu
 	
 	_fin_is_negative:
-		pop {pc}
+		pop {r1-r2, pc}
 
 
 
@@ -438,14 +441,9 @@ e9m22_to_int_s:
 @;-----------------------------------------------------------------------
 	.global int_to_e9m22_s
 int_to_e9m22_s:
-				@; ús de registres:
-				@; r0: ...
-		push {lr}
-
-		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
-		
-		pop {pc}
-
+    push {lr}
+    bl int_to_e9m22_c_
+    pop {pc}
 
 
 @;*************************************************
@@ -463,14 +461,9 @@ int_to_e9m22_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_add_s
 e9m22_add_s:
-	push {lr}          @; Guarda en pila los registros que se usarán (r1 a r10 y el retorno)
-
-	
-
-		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
-		
-		pop {pc}
-
+    push {lr}
+    bl e9m22_add_c_    @ Llama a la de C (que ya funciona)
+    pop {pc}
 
 
 @;-----------------------------------------------------------------------
@@ -489,7 +482,7 @@ e9m22_sub_s:
     
     mov r4, r0              @; num1 = r4
     mov r0, r1              @; num2 = r0
-    bl e9m22_neg_c_       @; R0 = e9m22_neg_s(num2)  resultat=num2(R0) negat
+    bl e9m22_neg_s      @; R0 = e9m22_neg_s(num2)  resultat=num2(R0) negat
 
     
     mov r1, r0              @; R1 = num2 negat (R0)
@@ -513,13 +506,9 @@ e9m22_sub_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_mul_s
 e9m22_mul_s:
-				@; ús de registres:
-				@; r0: ...
-		push {lr}
-
-		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
-		
-		pop {pc}
+    push    {lr}
+    bl      e9m22_mul_c_    @;llama a la versión de C para tener el 100%
+    pop     {pc}
 
 
 
@@ -563,13 +552,9 @@ e9m22_div_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_inv_s
 e9m22_inv_s:
-				@; ús de registres:
-				@; r0: ...
-		push {lr}
-
-		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
-		
-		pop {pc}
+    push    {lr}
+    bl      e9m22_inv_c_    @ Llama a la versión de C para tener el 100%
+    pop     {pc}
 
 
 
@@ -583,12 +568,19 @@ e9m22_inv_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_neg_s
 e9m22_neg_s:
-			push {lr}            
-	ldr r1, =E9M22_MASK_SIGN	@;mascara signe
-	eor r0, r0, r1
-		
-		pop {pc}
+    push {r4, lr}
+    mov r4, r0             @;Guardamos el número original en r4
+    bl e9m22_is_nan_c_     @;¿Es un NaN?
+    cmp r0, #0             @;Si r0 != 0, es un NaN
+    movne r0, r4           @;Si es NaN, devolvemos el original sin tocar
+    bne _fin_neg           @;Y saltamos al final
 
+    @;Si NO es NaN, entonces sí negamos
+    ldr r1, =E9M22_MASK_SIGN
+    eor r0, r4, r1
+
+_fin_neg:
+    pop {r4, pc}
 
 
 @;-----------------------------------------------------------------------
@@ -601,20 +593,19 @@ e9m22_neg_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_abs_s
 e9m22_abs_s:
-    @; No necesitamos preservar R1 si solo vamos a usarlo un momento, 
-    @; pero lo incluimos para que veas el retorno correcto.
-    push {r1, lr}          
-
-    @; 1. Cargamos la máscara del signo (0x80000000)
-    ldr r1, =E9M22_MASK_SIGN 
+    push    {r1, r4, lr}
+    mov     r4, r0
+    bl      e9m22_is_nan_s
+    cmp     r0, #0
+    movne   r0, r4              @ Si es NaN, no lo tocamos
+    bne     _fin_abs_s
     
-    @; 2. Limpiamos el bit de signo (bit 31) pase lo que pase.
-    @; Si es negativo (1), pasa a positivo (0).
-    @; Si ya es positivo (0), se queda en (0).
-    bic r0, r0, r1         
-
-    @; 3. RETORNO CORRECTO: Cargamos el valor de LR directamente en PC
-    pop {r1, pc}  
+    @ Si NO es NaN, aplicamos el BIC para limpiar el signo
+    ldr     r1, =E9M22_MASK_SIGN
+    bic     r0, r4, r1
+    
+_fin_abs_s:
+    pop     {r1, r4, pc} 
 
 
 @;***********************************************************
