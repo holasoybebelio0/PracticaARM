@@ -81,8 +81,8 @@ e9m22_mul	=	e9m22_mul_c	@; Versió en C
 @;e9m22_div	=	e9m22_div_c	@; Versió en C
 e9m22_div	=	e9m22_div_s	@; Versió assemblador
 
-e9m22_inv	=	e9m22_inv_c	@; Versió en C
-@;e9m22_inv	=	e9m22_inv_s	@; Versió assemblador
+@;e9m22_inv	=	e9m22_inv_c	@; Versió en C
+e9m22_inv	=	e9m22_inv_s	@; Versió assemblador
 
 @;e9m22_neg	=	e9m22_neg_c	@; Versió en C
 e9m22_neg	=	e9m22_neg_s	@; Versió assemblador

@@ -550,9 +550,113 @@ e9m22_div_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_inv_s
 e9m22_inv_s:
-    push    {lr}
-    bl      e9m22_inv_c_    @ Llama a la versión de C para tener el 100%
-    pop     {pc}
+    push    {r1-r9, lr}
+	
+	mov r4, r0 @; Guardem el valor
+	
+	mov  r0, r4                @; R0 = num
+    add  r1, sp, #0            @; R1 = &signe_div (adreça a la pila)
+    add  r2, sp, #4            @; R2 = &exp_sh    (adreça a la pila)
+    add  r3, sp, #8            @; R3 = &mant_nat  (adreça a la pila)
+    bl   e9m22_decompose       @; Crida a la rutina; el resultat 'class' queda a R0
+    mov  r5, r0                @; Guardem 'class' a r5
+
+    @; if ( e9m22_is_finite(num) )
+    mov  r0, r4                @; R0 = num
+    bl   e9m22_is_finite       @; Retorna != 0 si és finit
+    cmp  r0, #0                @; Comprovem si el resultat és fals (0)
+    beq  L_else_not_finite     @; Si no és finit, saltem a la part corresponent
+
+ 
+
+L_else_not_finite:
+
+    cmp  r0, #0                @; if ( e9m22_is_finite(num) )
+    beq  L_inv_nan_inf         @; Si no és finit, saltem al final (NaN o Infinit)
+
+    @; Dins del bloc finit: comprovem si és Zero
+    cmp  r5, #E9M22_CLASS_ZERO @; if ( class != E9M22_CLASS_ZERO )
+    beq  L_inv_is_zero         @; Si és zero, saltem a la part d'inversa = infinit
+
+    @; --- CAS NORMAL O DENORMAL ---
+    @; Carreguem valors desats a la pila per e9m22_decompose
+    ldrsh r6, [sp, #4]         @; r6 = exp (exp_sh)
+    ldr   r8, [sp, #8]         @; r8 = mant (mant_nat)
+
+    @; num_trailing_zeros = count_trailing_zeros_c_(mant);
+    mov   r0, r8
+    bl    count_trailing_zeros
+    cmp   r0, #0
+    ble   L_inv_skip_tz        @; if (num_trailing_zeros > 0)
+    
+    @; mant >>= num_trailing_zeros; exp += num_trailing_zeros;
+    lsr   r8, r8, r0           
+    add   r6, r6, r0           
+
+L_inv_skip_tz:
+    @; div_mod(0x80000000, mant, &quo, &res);
+    ldr   r0, =0x80000000      @; dividend
+    mov   r1, r8               @; divisor (mant ajustat)
+    add   r2, sp, #4           @; &quo (reutilitzem espai a la pila)
+    add   r3, sp, #8           @; &res (reutilitzem espai a la pila)
+    bl    div_mod
+
+    ldr   r7, [sp, #4]         @; r7 = mant_div (quo)
+    ldr   r9, [sp, #8]         @; r9 = res
+
+    @; exp_div = -exp + E9M22_m - E9M22_e; (E9M22_m - E9M22_e = 22 - 9 = 13)
+    rsb   r6, r6, #13          @; r6 = 13 - exp (exp_div)
+
+    @; if (res > 0)
+    cmp   r9, #0
+    beq   L_inv_normalize
+
+    @; num_leading_zeros = count_leading_zeros(mant_div);
+    mov   r0, r7
+    bl    count_leading_zeros
+    cmp   r0, #2               @; if (num_leading_zeros >= 2)
+    blt   L_inv_skip_shift
+    
+    @; mant_div <<= 2; exp_div -= 2;
+    lsl   r7, r7, #2
+    sub   r6, r6, #2
+
+L_inv_skip_shift:
+    @; Usar residu per calcular bits Round & Sticky:
+    @; if (mant <= res*2) Round bit = 1 (mant_div |= 2)
+    mov   r0, r9, lsl #1       @; r0 = res * 2
+    cmp   r8, r0               @; mant vs res*2
+    orrle r7, r7, #2           
+
+    @; if (mant < res*2) Sticky bit = 1 (mant_div |= 1)
+    cmp   r8, r0
+    orrlt r7, r7, #1           
+
+L_inv_normalize:
+    @; inversa = e9m22_normalize_and_round(signe_div, exp_div, mant_div);
+    ldr   r0, [sp, #0]         @; Carreguem signe_div des de la pila
+    mov   r1, r6               @; r1 = exp_div
+    mov   r2, r7               @; r2 = mant_div
+    bl    e9m22_normalize_and_round
+    b     L_inv_cleanup        @; El resultat ja està a r0
+
+L_inv_is_zero:
+    @; inversa = signe_div | E9M22_INF_POS; (1/0 = infinit amb el mateix signe)
+    ldr   r0, [sp, #0]         @; signe_div
+    ldr   r1, =E9M22_INF_POS
+    orr   r0, r0, r1
+    b     L_inv_cleanup
+
+L_inv_nan_inf:
+    @; Cas NaN o ±∞
+    cmp   r5, #E9M22_CLASS_NAN
+    moveq r0, r4               @; if (class == NAN) inversa = num (r4)
+    ldrne r0, [sp, #0]         @; else (INF) inversa = signe_div (bit 31, resta és 0)
+
+L_inv_cleanup:
+    @; EPILOGUE: Alliberem espai de pila i restaurem tots els registres usats     
+    pop  {r1-r9, pc}
+	
 
 
 
