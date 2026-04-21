@@ -26,8 +26,8 @@
 @;e9m22_classify	=	e9m22_classify_c	@; Versió en C
 e9m22_classify	=	e9m22_classify_s	@; Versió assemblador
 
-e9m22_is_normal	=	e9m22_is_normal_c	@; Versió en C
-@;e9m22_is_normal	=	e9m22_is_normal_s	@; Versió assemblador
+@;e9m22_is_normal	=	e9m22_is_normal_c	@; Versió en C
+e9m22_is_normal	=	e9m22_is_normal_s	@; Versió assemblador
 
 @;e9m22_is_denormal	=	e9m22_is_denormal_c	@; Versió en C
 e9m22_is_denormal	=	e9m22_is_denormal_s	@; Versió assemblador
@@ -44,8 +44,8 @@ e9m22_is_nan	=	e9m22_is_nan_s	@; Versió assemblador
 @;e9m22_is_finite	=	e9m22_is_finite_c	@; Versió en C
 e9m22_is_finite	=	e9m22_is_finite_s	@; Versió assemblador
 
-e9m22_is_negative	=	e9m22_is_negative_c	@; Versió en C
-@;e9m22_is_negative	=	e9m22_is_negative_s	@; Versió assemblador
+@;e9m22_is_negative	=	e9m22_is_negative_c	@; Versió en C
+e9m22_is_negative	=	e9m22_is_negative_s	@; Versió assemblador
 
 
 @;******************************************************
@@ -69,14 +69,14 @@ int_to_e9m22	=	int_to_e9m22_c	@; Versió en C
 @;* Operacions ARITMÈTIQUES en Coma Flotant E9M22 *
 @;*************************************************
 
-e9m22_add	=	e9m22_add_c	@; Versió en C
-@;e9m22_add	=	e9m22_add_s	@; Versió assemblador
+@;e9m22_add	=	e9m22_add_c	@; Versió en C
+e9m22_add	=	e9m22_add_s	@; Versió assemblador
 
 @;e9m22_sub	=	e9m22_sub_c	@; Versió en C
 e9m22_sub	=	e9m22_sub_s	@; Versió assemblador
 
-e9m22_mul	=	e9m22_mul_c	@; Versió en C
-@;e9m22_mul	=	e9m22_mul_s	@; Versió assemblador
+@;e9m22_mul	=	e9m22_mul_c	@; Versió en C
+e9m22_mul	=	e9m22_mul_s	@; Versió assemblador
 
 @;e9m22_div	=	e9m22_div_c	@; Versió en C
 e9m22_div	=	e9m22_div_s	@; Versió assemblador

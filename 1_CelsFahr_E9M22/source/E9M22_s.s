@@ -564,18 +564,18 @@ e9m22_inv_s:
     mov  r0, r4                @; R0 = num
     bl   e9m22_is_finite       
     cmp  r0, #0                @; Comprovem si el resultat és fals (0)
-    beq  L_No_Es_Finit     @; Si no és finit
+    beq  .L_No_Es_Finit     @; Si no és finit
 
  
 
-L_No_Es_Finit:
+.L_No_Es_Finit:
 
     cmp  r0, #0                @; if ( e9m22_is_finite(num) )
-    beq  L_inv_nan_inf         @; Si no és finit, saltem al final (NaN o Infinit)
+    beq  .L_inv_nan_inf         @; Si no és finit, saltem al final (NaN o Infinit)
 
     
     cmp  r5, #E9M22_CLASS_ZERO @; if ( class != E9M22_CLASS_ZERO )
-    beq  L_inv_es_zero         @; Si és zero, saltem a la part d'inversa = infinit
+    beq  .L_inv_es_zero         @; Si és zero, saltem a la part d'inversa = infinit
 
     @; --- CAS NORMAL O DENORMAL ---
     @; Carreguem valors desats a la pila per e9m22_decompose
@@ -586,13 +586,13 @@ L_No_Es_Finit:
     mov   r0, r8
     bl    count_trailing_zeros
     cmp   r0, #0
-    ble   L_inv_skip_tz        @; if (num_trailing_zeros > 0)
+    ble   .L_inv_skip_tz        @; if (num_trailing_zeros > 0)
     
     @; mant >>= num_trailing_zeros; exp += num_trailing_zeros;
     lsr   r8, r8, r0           
     add   r6, r6, r0           
 
-L_inv_skip_tz:
+.L_inv_skip_tz:
     @; div_mod(0x80000000, mant, &quo, &res);
     ldr   r0, =0x80000000      @; dividend
     mov   r1, r8               @; divisor (mant ajustat)
@@ -608,19 +608,19 @@ L_inv_skip_tz:
 
     @; if (res > 0)
     cmp   r9, #0
-    beq   L_inv_normalize
+    beq   .L_inv_normalize
 
     @; num_leading_zeros = count_leading_zeros(mant_div);
     mov   r0, r7
     bl    count_leading_zeros
     cmp   r0, #2               @; if (num_leading_zeros >= 2)
-    blt   L_inv_skip_shift
+    blt   .L_inv_skip_shift
     
     @; mant_div <<= 2; exp_div -= 2;
     lsl   r7, r7, #2
     sub   r6, r6, #2
 
-L_inv_skip_shift:
+.L_inv_skip_shift:
     
     @; if (mant <= res*2) Round bit = 1 (mant_div |= 2)
     mov   r0, r9, lsl #1       @; r0 = res * 2
@@ -631,27 +631,27 @@ L_inv_skip_shift:
     cmp   r8, r0
     orrlt r7, r7, #1           
 
-L_inv_normalize:
+.L_inv_normalize:
     @; inversa = e9m22_normalize_and_round(signe_div, exp_div, mant_div);
     ldr   r0, [sp, #0]         @; Carreguem signe_div des de la pila
     mov   r1, r6               @; r1 = exp_div
     mov   r2, r7               @; r2 = mant_div
     bl    e9m22_normalize_and_round
-    b     L_inv_fi       @;r0 = resultat
+    b     .L_inv_fi       @;r0 = resultat
 
-L_inv_es_zero:
+.L_inv_es_zero:
     @; inversa = signe_div | E9M22_INF_POS; (1/0 = infinit amb el mateix signe)
     ldr   r0, [sp, #0]         @; signe_div
     ldr   r1, =E9M22_INF_POS
     orr   r0, r0, r1
-    b     L_inv_fi
+    b     .L_inv_fi
 
-L_inv_nan_inf:
+.L_inv_nan_inf:
     cmp   r5, #E9M22_CLASS_NAN
     moveq r0, r4               @; if (class == NAN) inversa = num (r4)
     ldrne r0, [sp, #0]         @; else (INF) inversa = signe_div (bit 31, resta és 0)
 
-L_inv_fi:
+.L_inv_fi:
      
     pop  {r1-r9, pc}
 	
@@ -705,7 +705,7 @@ e9m22_abs_s:
 	.global e9m22_compare_s
 e9m22_compare_s:
 				
-    push {r4-r9, pc}
+    push {r4-r9, lr}
 
     mov r4, r0              @; r4 = num1
     mov r5, r1              @; r5 = num2
@@ -722,9 +722,9 @@ e9m22_compare_s:
 
     @; if ( (class1 != E9M22_CLASS_NAN) && (class2 != E9M22_CLASS_NAN) )
     cmp r6, #E9M22_CLASS_NAN
-    beq L_compare_es_nan    @; Salta si num1 és NaN
+    beq ._compare_es_nan    @; Salta si num1 és NaN
     cmp r7, #E9M22_CLASS_NAN
-    beq L_compare_es_nan    @; Salta si num2 és NaN
+    beq ._compare_es_nan    @; Salta si num2 és NaN
 
     @; Obtenir signes: sign1 = num1 & MASK; sign2 = num2 & MASK;
     ldr r2, =E9M22_MASK_SIGN
@@ -733,48 +733,48 @@ e9m22_compare_s:
 
     @; if (sign1 != sign2)
     cmp r8, r9
-    bne L_compare_signes_diferents
+    bne ._compare_signes_diferents
 
     @; MAteix Signe
     cmp r8, #0					
-    bne L_compare_tots_negatius
+    bne ._compare_tots_negatius
 
-L_compare_tots_positius:
+._compare_tots_positius:
     @; Si tots dos son positius, l'ordre és el natural dels bits
     cmp r4, r5
     moveq r0, #E9M22_CMP_EQUAL
     movhi r0, #E9M22_CMP_GREATER
     movlo r0, #E9M22_CMP_LESS
-    b L_compare_final
+    b ._compare_final
 
-L_compare_tots_negatius:
+._compare_tots_negatius:
     @; Si tots dos son negatius, l'ordre s'inverteix respecte al patró de bits
     cmp r4, r5
     moveq r0, #E9M22_CMP_EQUAL
     movhi r0, #E9M22_CMP_LESS      @; Un valor de bits més alt en negatiu és "més petit"
     movlo r0, #E9M22_CMP_GREATER
-    b L_compare_final
+    b ._compare_final
 
-L_compare_signes_diferents:
+._compare_signes_diferents:
     @; if ( (class1 == E9M22_CLASS_ZERO) && (class2 == E9M22_CLASS_ZERO) )
     cmp r6, #E9M22_CLASS_ZERO
-    bne L_compare_no_zeros
+    bne ._compare_no_zeros
     cmp r7, #E9M22_CLASS_ZERO
     moveq r0, #E9M22_CMP_EQUAL     @; +0.0 és igual a -0.0
-    beq L_compare_final
+    beq ._compare_final
 
-L_compare_no_zeros:
+._compare_no_zeros:
     @; Si un es negatiu i l'altre positiu, el positiu sempre es mes gran
     cmp r8, #0
     moveq r0, #E9M22_CMP_GREATER    @; num1 (positiu) > num2 (negatiu)
     movne r0, #E9M22_CMP_LESS       @; num1 (negatiu) < num2 (positiu)
-    b L_compare_final
+    b ._compare_final
 
-L_compare_es_nan:
+._compare_es_nan:
     @; Si algun operand és NaN, no son comparables
     mov r0, #E9M22_CMP_NC_NAN
 
-L_compare_final:
+._compare_final:
    
     pop {r4-r9, pc}
 
@@ -869,7 +869,7 @@ e9m22_round_s:
 
 @;****************************************************************
 @;* Funcions AUXILIARS per treballar amb els bits de codificació *
-@;****************************************************************
+@;**************************************************************** 
 
 
 @;-----------------------------------------------------------------------
