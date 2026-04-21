@@ -188,15 +188,17 @@ e9m22_is_zero_s:
 		push {lr}
 
 		ldr r1, =E9M22_MASK_EXP
-		ldr r2, =E9M22_MASK_FRAC
+		
+		and r2, r0, r1 @; exponent = num & E9M22_MASK_EXP
 
-		and r3, r0, r1 @; exponent = num & E9M22_MASK_EXP
-		and r4, r0, r2 @; mantissa = "" & E9M22_MASK_FRAC
-
-		cmp r3, #0 @; si exponent != 0, fals
+		cmp r2, #0 @; si exponent != 0, fals
 		bne _fals_if_is_zero 
 
-		cmp r4, #0 @; si mantissa != 0, fals
+		ldr r1, =E9M22_MASK_FRAC
+
+		and r2, r0, r1 @; mantissa = num & E9M22_MASK_FRAC
+
+		cmp r2, #0 @; si mantissa != 0, fals
 		bne _fals_if_is_zero
 
 		ldr r0, =0xFC2026 @; carreguem el valor a resultat si és classe ZERO
