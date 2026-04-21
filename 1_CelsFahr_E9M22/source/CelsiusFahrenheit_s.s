@@ -35,11 +35,20 @@ Celsius2Fahrenheit:
 				@; ús de registres:
 				@; r0: paràmetre input / resultat output
 				@; rN: ...
-		push {lr}
+		push {r1, lr}           
+
+		@;resultat = (r0 * 9/5)
+		mov  r1, r0            @; r0 = r1
+		ldr  r1, =0x3FF33333    @; Segon paràmetre: constant 1.8
+		bl   e9m22_mul          @; resultat = e9m22_mul(input, 1.8)
+
+		@; 2a part càlcul: resultat = resultat + 32.0
+		ldr  r1, =0x41000000    
+		bl   e9m22_add
 		
-		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
+		mov r0, r1
 		
-		pop {pc}
+		pop {r1, pc}
 
 
 
@@ -55,10 +64,23 @@ Fahrenheit2Celsius:
 				@; ús de registres:
 				@; r0: paràmetre input / resultat output
 				@; rN: ...
-		push {lr}
+		push {r1, lr}
 		
-		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
+		mov r1, r0
 		
-		pop {pc}
+		ldr r1, =0x41000000
+		bl e9m22_sub
+		
+		
+		ldr r1, =0x3F0E38E3
+		bl e9m22_mul
+		
+		mov r0, r1
+		
+		pop {r1, pc}
+
+
+
+
 
 .end

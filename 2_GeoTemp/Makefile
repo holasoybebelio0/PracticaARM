@@ -27,8 +27,8 @@ tota_2a_part_practica_FC : test_geotemp_c.elf test_geotemp_s.elf geotemp_c.elf g
 	$(warning Recorda: aquest Makefile esta incomplet. Completa les regles faltants!! ... i esborra aquest warning.)
 
 
-build/avgmaxmintemp_c.o : source/avgmaxmintemp_c.c # falten includes .h
-	$(warning Regla incompleta: build/avgmaxmintemp_c.o)
+build/avgmaxmintemp_c.o : source/avgmaxmintemp_c.c include/geotemp.h include/E9M22_impl.h include/E9M22.h
+	arm-none-eabi-as $(ASFLAGS) -c source/avgmaxmintemp_c.c -o build/avgmaxmintemp_c.o
 
 geotemp_c.elf : build/geotemp.o build/avgmaxmintemp_c.o # falten alguns fitxers .o i .a
 	$(warning Regla incompleta: geotemp_c.elf)
