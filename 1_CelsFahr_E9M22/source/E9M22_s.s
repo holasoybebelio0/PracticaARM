@@ -461,7 +461,7 @@ int_to_e9m22_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_add_s
 e9m22_add_s:
-	push {r1-r10,lr}          @; Guarda en pila los registros que se usarán (r1 a r10 y el retorno)
+	push {lr}          @; Guarda en pila los registros que se usarán (r1 a r10 y el retorno)
 
 	
 
@@ -539,12 +539,12 @@ e9m22_div_s:
     @; Paso 2: Calcular el inverso del segundo operando: 1 / num2
     mov r4, r0              @; Guardamos num1 en R4 para que no se pierda
     mov r0, r1              @; Ponemos num2 en R0 para la función inv
-    bl e9m22_inv_s          @; R0 = e9m22_inv_s(num2) -> resultado: invers2
+    bl e9m22_inv_c_         @; R0 = e9m22_inv_s(num2) -> resultado: invers2
 
     @; Paso 3: Realizar la multiplicación: num1 * invers2
     mov r1, r0              @; Movemos el inverso (resultado de inv) a R1
     mov r0, r4              @; Recuperamos num1 de R4 y lo ponemos en R0
-    bl e9m22_mul_s          @; R0 = e9m22_mul_s(num1, invers2)
+    bl e9m22_mul_c_          @; R0 = e9m22_mul_s(num1, invers2)
 
     @; Paso 4: Restaurar registros y retornar
     pop {r4, pc}

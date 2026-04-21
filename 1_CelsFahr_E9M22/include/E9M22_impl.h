@@ -27,29 +27,29 @@
 /* Rutines de CLASSIFICACIÓ de valors en coma flotant E9M22 */
 /************************************************************/
 
-//#define e9m22_classify	e9m22_classify_c_	// Versió en C
-#define e9m22_classify	e9m22_classify_s	// Versió assemblador
+#define e9m22_classify	e9m22_classify_c_	// Versió en C
+//#define e9m22_classify	e9m22_classify_s	// Versió assemblador
 
-//#define e9m22_is_normal	e9m22_is_normal_c_	// Versió en C
-#define e9m22_is_normal	e9m22_is_normal_s	// Versió assemblador
+#define e9m22_is_normal	e9m22_is_normal_c_	// Versió en C
+//#define e9m22_is_normal	e9m22_is_normal_s	// Versió assemblador
 
-//#define e9m22_is_denormal	e9m22_is_denormal_c_	// Versió en C
-#define e9m22_is_denormal	e9m22_is_denormal_s	// Versió assemblador
+#define e9m22_is_denormal	e9m22_is_denormal_c_	// Versió en C
+//#define e9m22_is_denormal	e9m22_is_denormal_s	// Versió assemblador
 
-//#define e9m22_is_zero	e9m22_is_zero_c_	// Versió en C
-#define e9m22_is_zero	e9m22_is_zero_s	// Versió assemblador
+#define e9m22_is_zero	e9m22_is_zero_c_	// Versió en C
+//#define e9m22_is_zero	e9m22_is_zero_s	// Versió assemblador
 
-//#define e9m22_is_infinite	e9m22_is_infinite_c_	// Versió en C
-#define e9m22_is_infinite	e9m22_is_infinite_s	// Versió assemblador
+#define e9m22_is_infinite	e9m22_is_infinite_c_	// Versió en C
+//#define e9m22_is_infinite	e9m22_is_infinite_s	// Versió assemblador
 
-//#define e9m22_is_nan	e9m22_is_nan_c_	// Versió en C
-#define e9m22_is_nan	e9m22_is_nan_s	// Versió assemblador
+#define e9m22_is_nan	e9m22_is_nan_c_	// Versió en C
+//#define e9m22_is_nan	e9m22_is_nan_s	// Versió assemblador
 
-//#define e9m22_is_finite	e9m22_is_finite_c_	// Versió en C
-#define e9m22_is_finite	e9m22_is_finite_s	// Versió assemblador
+#define e9m22_is_finite	e9m22_is_finite_c_	// Versió en C
+//#define e9m22_is_finite	e9m22_is_finite_s	// Versió assemblador
 
-//#define e9m22_is_negative	e9m22_is_negative_c_	// Versió en C
-#define e9m22_is_negative	e9m22_is_negative_s	// Versió assemblador
+#define e9m22_is_negative	e9m22_is_negative_c_	// Versió en C
+//#define e9m22_is_negative	e9m22_is_negative_s	// Versió assemblador
 
 
 /******************************************************/

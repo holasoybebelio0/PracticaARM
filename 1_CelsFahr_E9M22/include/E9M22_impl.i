@@ -5,7 +5,7 @@
 @;	pere.millan@urv.cat
 @;	(Març 2025, Febrer-Març 2026)
 @;--------------------------------------------------------------------
-@;	Programador/a 1: xxx.xxx@estudiants.urv.cat
+@;	Programador/a 1: evelio.ruiz@estudiants.urv.cat
 @;	Programador/a 2: yyy.yyy@estudiants.urv.cat
 @;--------------------------------------------------------------------
 @; © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
@@ -23,29 +23,29 @@
 @;* Rutines de CLASSIFICACIÓ de valors en coma flotant E9M22 *
 @;************************************************************
 
-@;e9m22_classify	=	e9m22_classify_c	@; Versió en C
-e9m22_classify	=	e9m22_classify_s	@; Versió assemblador
+e9m22_classify	=	e9m22_classify_c	@; Versió en C
+@;e9m22_classify	=	e9m22_classify_s	@; Versió assemblador
 
-@;e9m22_is_normal	=	e9m22_is_normal_c	@; Versió en C
-e9m22_is_normal	=	e9m22_is_normal_s	@; Versió assemblador
+e9m22_is_normal	=	e9m22_is_normal_c	@; Versió en C
+@;e9m22_is_normal	=	e9m22_is_normal_s	@; Versió assemblador
 
-@;e9m22_is_denormal	=	e9m22_is_denormal_c	@; Versió en C
-e9m22_is_denormal	=	e9m22_is_denormal_s	@; Versió assemblador
+e9m22_is_denormal	=	e9m22_is_denormal_c	@; Versió en C
+@;e9m22_is_denormal	=	e9m22_is_denormal_s	@; Versió assemblador
 
-@;e9m22_is_zero	=	e9m22_is_zero_c	@; Versió en C
-e9m22_is_zero	=	e9m22_is_zero_s	@; Versió assemblador
+e9m22_is_zero	=	e9m22_is_zero_c	@; Versió en C
+@;e9m22_is_zero	=	e9m22_is_zero_s	@; Versió assemblador
 
-@;e9m22_is_infinite	=	e9m22_is_infinite_c	@; Versió en C
-e9m22_is_infinite	=	e9m22_is_infinite_s	@; Versió assemblador
+e9m22_is_infinite	=	e9m22_is_infinite_c	@; Versió en C
+@;e9m22_is_infinite	=	e9m22_is_infinite_s	@; Versió assemblador
 
-@;e9m22_is_nan	=	e9m22_is_nan_c	@; Versió en C
-e9m22_is_nan	=	e9m22_is_nan_s	@; Versió assemblador
+e9m22_is_nan	=	e9m22_is_nan_c	@; Versió en C
+@;e9m22_is_nan	=	e9m22_is_nan_s	@; Versió assemblador
 
-@;e9m22_is_finite	=	e9m22_is_finite_c	@; Versió en C
-e9m22_is_finite	=	e9m22_is_finite_s	@; Versió assemblador
+e9m22_is_finite	=	e9m22_is_finite_c	@; Versió en C
+@;e9m22_is_finite	=	e9m22_is_finite_s	@; Versió assemblador
 
-@;e9m22_is_negative	=	e9m22_is_negative_c	@; Versió en C
-e9m22_is_negative	=	e9m22_is_negative_s	@; Versió assemblador
+e9m22_is_negative	=	e9m22_is_negative_c	@; Versió en C
+@;e9m22_is_negative	=	e9m22_is_negative_s	@; Versió assemblador
 
 
 @;******************************************************
@@ -78,8 +78,8 @@ e9m22_sub	=	e9m22_sub_s	@; Versió assemblador
 e9m22_mul	=	e9m22_mul_c	@; Versió en C
 @;e9m22_mul	=	e9m22_mul_s	@; Versió assemblador
 
-e9m22_div	=	e9m22_div_c	@; Versió en C
-@;e9m22_div	=	e9m22_div_s	@; Versió assemblador
+@;e9m22_div	=	e9m22_div_c	@; Versió en C
+e9m22_div	=	e9m22_div_s	@; Versió assemblador
 
 e9m22_inv	=	e9m22_inv_c	@; Versió en C
 @;e9m22_inv	=	e9m22_inv_s	@; Versió assemblador
