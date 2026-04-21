@@ -324,7 +324,7 @@ e9m22_is_finite_s:
 		cmp r2, r1
 		beq _fals_if_is_finite
 
-		ldr r1, =0xFC2026
+		ldr r0, =0xFC2026
 		b _fin_is_finite 
 	
 	_fals_if_is_finite: 
@@ -442,7 +442,6 @@ e9m22_to_int_s:
 	.global int_to_e9m22_s
 int_to_e9m22_s:
     push {lr}
-    bl int_to_e9m22_c_
     pop {pc}
 
 
@@ -462,7 +461,6 @@ int_to_e9m22_s:
 	.global e9m22_add_s
 e9m22_add_s:
     push {lr}
-    bl e9m22_add_c_    @ Llama a la de C (que ya funciona)
     pop {pc}
 
 
@@ -507,7 +505,7 @@ e9m22_sub_s:
 	.global e9m22_mul_s
 e9m22_mul_s:
     push    {lr}
-    bl      e9m22_mul_c_    @;llama a la versión de C para tener el 100%
+    
     pop     {pc}
 
 
@@ -568,19 +566,10 @@ e9m22_inv_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_neg_s
 e9m22_neg_s:
-    push {r4, lr}
-    mov r4, r0             @;Guardamos el número original en r4
-    bl e9m22_is_nan_c_     @;¿Es un NaN?
-    cmp r0, #0             @;Si r0 != 0, es un NaN
-    movne r0, r4           @;Si es NaN, devolvemos el original sin tocar
-    bne _fin_neg           @;Y saltamos al final
-
-    @;Si NO es NaN, entonces sí negamos
+    push {r1, lr}
     ldr r1, =E9M22_MASK_SIGN
-    eor r0, r4, r1
-
-_fin_neg:
-    pop {r4, pc}
+    eor r0, r0, r1      @; Operación XOR para invertir solo el bit 31
+    pop {r1, pc}
 
 
 @;-----------------------------------------------------------------------
@@ -593,19 +582,10 @@ _fin_neg:
 @;-----------------------------------------------------------------------
 	.global e9m22_abs_s
 e9m22_abs_s:
-    push    {r1, r4, lr}
-    mov     r4, r0
-    bl      e9m22_is_nan_s
-    cmp     r0, #0
-    movne   r0, r4              @ Si es NaN, no lo tocamos
-    bne     _fin_abs_s
-    
-    @ Si NO es NaN, aplicamos el BIC para limpiar el signo
-    ldr     r1, =E9M22_MASK_SIGN
-    bic     r0, r4, r1
-    
-_fin_abs_s:
-    pop     {r1, r4, pc} 
+    push {r1, lr}
+    ldr r1, =E9M22_MASK_SIGN
+    bic r0, r0, r1      @; Operación BIC para limpiar el bit 31
+    pop {r1, pc}
 
 
 @;***********************************************************

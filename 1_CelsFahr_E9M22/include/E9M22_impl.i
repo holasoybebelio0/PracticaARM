@@ -26,8 +26,8 @@
 @;e9m22_classify	=	e9m22_classify_c	@; Versió en C
 e9m22_classify	=	e9m22_classify_s	@; Versió assemblador
 
-@;e9m22_is_normal	=	e9m22_is_normal_c	@; Versió en C
-e9m22_is_normal	=	e9m22_is_normal_s	@; Versió assemblador
+e9m22_is_normal	=	e9m22_is_normal_c	@; Versió en C
+@;e9m22_is_normal	=	e9m22_is_normal_s	@; Versió assemblador
 
 @;e9m22_is_denormal	=	e9m22_is_denormal_c	@; Versió en C
 e9m22_is_denormal	=	e9m22_is_denormal_s	@; Versió assemblador
@@ -44,8 +44,8 @@ e9m22_is_nan	=	e9m22_is_nan_s	@; Versió assemblador
 @;e9m22_is_finite	=	e9m22_is_finite_c	@; Versió en C
 e9m22_is_finite	=	e9m22_is_finite_s	@; Versió assemblador
 
-@;e9m22_is_negative	=	e9m22_is_negative_c	@; Versió en C
-e9m22_is_negative	=	e9m22_is_negative_s	@; Versió assemblador
+e9m22_is_negative	=	e9m22_is_negative_c	@; Versió en C
+@;e9m22_is_negative	=	e9m22_is_negative_s	@; Versió assemblador
 
 
 @;******************************************************
