@@ -24,27 +24,31 @@ LDFLAGS := -z max-page-size=0x8000
 # make commands
 #-------------------------------------------------------------------------------
 tota_2a_part_practica_FC : test_geotemp_c.elf test_geotemp_s.elf geotemp_c.elf geotemp_s.elf 
-	$(warning Recorda: aquest Makefile esta incomplet. Completa les regles faltants!! ... i esborra aquest warning.)
+	
 
 
 build/avgmaxmintemp_c.o : source/avgmaxmintemp_c.c include/geotemp.h include/E9M22_impl.h include/E9M22.h
-	arm-none-eabi-as $(ASFLAGS) -c source/avgmaxmintemp_c.c -o build/avgmaxmintemp_c.o
+	arm-none-eabi-gcc $(CCFLAGS) -c source/avgmaxmintemp_c.c -o build/avgmaxmintemp_c.o
 
 geotemp_c.elf : build/geotemp.o build/avgmaxmintemp_c.o # falten alguns fitxers .o i .a
-	$(warning Regla incompleta: geotemp_c.elf)
+	$arm-none-eabi-ld $(LDFLAGS) build/geotemp.o build/avgmaxmintemp_c.o build/data.o \
+					 p_lib/CelsiusFahrenheit_c.o p_lib/startup.o p_lib/libE9M22.a \
+					 p_lib/libfoncompus.a -o geotemp_c.elf
 
 
 build/avgmaxmintemp_s.o : source/avgmaxmintemp_s.s # falten includes .i
-	$(warning Regla incompleta: build/avgmaxmintemp_s.o)
+	arm-none-eabi-as $(ASFLAGS) -c source/avgmaxmintemp_s.s -o build/avgmaxmintemp_s.o
 
 geotemp_s.elf : build/geotemp.o build/avgmaxmintemp_s.o # falten alguns fitxers .o i .a
-	$(warning Regla incompleta: geotemp_s.elf)
+	$arm-none-eabi-ld $(LDFLAGS) build/geotemp.o build/avgmaxmintemp_s.o build/data.o \
+					 p_lib/CelsiusFahrenheit_s.o p_lib/startup.o p_lib/libE9M22.a \
+					 p_lib/libfoncompus.a -o geotemp_s.elf
 
 build/data.o : source/data.c # falten includes .h
-	$(warning Regla incompleta: build/data.o)
+	arm-none-eabi-gcc $(CCFLAGS) -c source/data.c -o build/data.o
 
 build/geotemp.o : source/geotemp.c include/E9M22.h include/CelsiusFahrenheit.h include/avgmaxmintemp.h
-	arm-none-eabi-gcc $(CCFLAGS) -c source/geotemp.c -o build/geotemp.o
+	aarm-none-eabi-gcc $(CCFLAGS) -c source/geotemp.c -o build/geotemp.o
 
 
 

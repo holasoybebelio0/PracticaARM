@@ -474,20 +474,20 @@ e9m22_add_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_sub_s
 e9m22_sub_s:
-    push {r4, lr}          
+    push {r1-r2, lr}          
 
     
-    mov r4, r0              @; num1 = r4
+    mov r2, r0              @; num1 = r4
     mov r0, r1              @; num2 = r0
     bl e9m22_neg_s      @; R0 = e9m22_neg_s(num2)  resultat=num2(R0) negat
 
     
     mov r1, r0              @; R1 = num2 negat (R0)
-    mov r0, r4              @; R0 = num1
+    mov r0, r2              @; R0 = num1
     bl e9m22_add_c_        @; R0 = e9m22_add_s(num1, num2negat)
 
     
-    pop {r4, pc}        
+    pop {r1-r2, pc}        
 
 
 

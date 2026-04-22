@@ -1298,7 +1298,7 @@ int main(void)
     unsigned int perc_ok_decomp=0;	/* percentage of correct tests e9m22_decompose */
 
 		// Jocs de proves e9m22_classify
-	perc_ok_class = apply_tests_classify( 
+	perc_ok_class = apply_tests_classify(
 						test_cases_class, NUM_ELEMS(test_cases_class) );	// test cases
 
 		// Jocs de proves e9m22_is_normal

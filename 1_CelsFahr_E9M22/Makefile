@@ -113,5 +113,5 @@ run : demo_pi.elf	demo_CelsFahr.elf	demo_E9M22.elf
 # debug commands
 #-----------------------------------------------------------------------------
 debug : test_CelsiusFahrenheit.elf	test_E9M22.elf 
-	arm-eabi-insight test_CelsiusFahrenheit.elf &
-	#arm-eabi-insight test_E9M22.elf &
+	#arm-eabi-insight test_CelsiusFahrenheit.elf &
+	arm-eabi-insight test_E9M22.elf &
