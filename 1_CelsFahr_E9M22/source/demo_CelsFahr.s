@@ -36,8 +36,18 @@ main:
         push {lr}
         
             @; temp1F = Celsius2Fahrenheit(temp1C);
+            ldr r0, =temp1C         @; Cargar dirección de temp1C
+            ldr r0, [r0]            @; Cargar el valor de temp1C en r0
+            bl Celsius2Fahrenheit   @; Llamar a la función
+            ldr r1, =temp1F         @; Cargar dirección de destino
+            str r0, [r1]            @; Guardar el resultado en temp1F
         
             @; temp2C = Fahrenheit2Celsius(temp2F);
+            ldr r0, =temp2F         @; Cargar dirección de temp2F
+            ldr r0, [r0]            @; Cargar el valor de temp2F en r0
+            bl Fahrenheit2Celsius   @; Llamar a la función
+            ldr r1, =temp2C         @; Cargar dirección de destino
+            str r0, [r1]            @; Guardar el resultado en temp2C
 
 
 @; TESTING POINT: check the results

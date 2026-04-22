@@ -4,7 +4,7 @@
 # Date: April 2021, March 2022-2024, February-March 2025
 #-------------------------------------------------------------------------------
 #	Programador/a 1: evelio.ruiz@estudiants.urv.cat
-#	Programador/a 2: pau.yyy@estudiants.urv.cat
+#	Programador/a 2: pau.gutierrez@estudiants.urv.cat
 #-------------------------------------------------------------------------------
 
 #-------------------------------------------------------------------------------
@@ -40,10 +40,11 @@ demo_E9M22.elf : build/demo_E9M22.o libE9M22.a
 
 
 build/demo_CelsFahr.o: source/demo_CelsFahr.s include/CelsiusFahrenheit.h include/divmod.h 
-	arm-none-eabi-gcc $(CCFLAGS) -c source/demo_CelsFahr.s -o build/demo_CelsFahr.o
+	arm-none-eabi-as $(ASFLAGS) source/demo_CelsFahr.s -o build/demo_CelsFahr.o
 
-demo_CelsFahr.elf : build/demo_CelsFahr.o 
-	arm-none-eabi-ld $(LDFLAGS) build/demo_CelsFahr.o p_lib/startup.o \
+demo_CelsFahr.elf : build/demo_CelsFahr.o build/CelsiusFahrenheit_s.o libE9M22.a
+	arm-none-eabi-ld $(LDFLAGS) p_lib/startup.o build/demo_CelsFahr.o \
+					build/CelsiusFahrenheit_s.o libE9M22.a \
 					p_lib/libfoncompus.a -o demo_CelsFahr.elf
 
 
@@ -105,8 +106,8 @@ clean :
 #-----------------------------------------------------------------------------
 run : demo_pi.elf	demo_CelsFahr.elf	demo_E9M22.elf
 	#arm-eabi-insight demo_pi.elf &
-	#arm-eabi-insight demo_CelsFahr.elf &
-	arm-eabi-insight demo_E9M22.elf &
+	arm-eabi-insight demo_CelsFahr.elf &
+	#arm-eabi-insight demo_E9M22.elf &
 
 
 #-----------------------------------------------------------------------------

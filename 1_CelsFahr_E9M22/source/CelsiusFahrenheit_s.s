@@ -46,7 +46,6 @@ Celsius2Fahrenheit:
 		ldr  r1, =0x41000000    
 		bl   e9m22_add
 		
-		mov r0, r1
 		
 		pop {r1, pc}
 
@@ -75,7 +74,6 @@ Fahrenheit2Celsius:
 		ldr r1, =0x3F0E38E3
 		bl e9m22_mul
 		
-		mov r0, r1
 		
 		pop {r1, pc}
 

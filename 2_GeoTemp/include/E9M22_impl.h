@@ -43,20 +43,20 @@
 #define E9M22_add	E9M22_add_c_	// Versió en C
 //#define E9M22_add	E9M22_add_s	// Versió assemblador
 
-#define E9M22_sub	E9M22_sub_c_	// Versió en C
-//#define E9M22_sub	E9M22_sub_s	// Versió assemblador
+//#define E9M22_sub	E9M22_sub_c_	// Versió en C
+#define E9M22_sub	E9M22_sub_s	// Versió assemblador
 
 #define E9M22_mul	E9M22_mul_c_	// Versió en C
 //#define E9M22_mul	E9M22_mul_s	// Versió assemblador
 
-#define E9M22_div	E9M22_div_c_	// Versió en C
-//#define E9M22_div	E9M22_div_s	// Versió assemblador
+//#define E9M22_div	E9M22_div_c_	// Versió en C
+#define E9M22_div	E9M22_div_s	// Versió assemblador
 
-#define E9M22_neg	E9M22_neg_c_	// Versió en C
-//#define E9M22_neg	E9M22_neg_s	// Versió assemblador
+//#define E9M22_neg	E9M22_neg_c_	// Versió en C
+#define E9M22_neg	E9M22_neg_s	// Versió assemblador
 
-#define E9M22_abs	E9M22_abs_c_	// Versió en C
-//#define E9M22_abs	E9M22_abs_s	// Versió assemblador
+//#define E9M22_abs	E9M22_abs_c_	// Versió en C
+#define E9M22_abs	E9M22_abs_s	// Versió assemblador
 
 
 /*************************************************************/
