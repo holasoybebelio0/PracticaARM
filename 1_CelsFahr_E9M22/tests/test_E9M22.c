@@ -5,8 +5,8 @@
 |	santiago.romani@urv.cat
 |	(Març 2021-2025, Febrer-Març 2026)
 | --------------------------------------------------------------------
-|	Programador/a 1: xxx.xxx@estudiants.urv.cat
-|	Programador/a 2: yyy.yyy@estudiants.urv.cat
+|	Programador/a 1: evelio.ruiz@estudiants.urv.cat
+|	Programador/a 2: pau.gutierrez@estudiants.urv.cat
 | --------------------------------------------------------------------
 | © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
 | Ús exclusiu dins l’assignatura; prohibida la seva redistribució.
