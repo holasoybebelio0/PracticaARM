@@ -3,8 +3,8 @@
 # Authors: Santiago Romaní, Pere Millán
 # Date: April 2021, March 2022-2024, March 2025
 #-------------------------------------------------------------------------------
-#	Programador/a 1: xxx.xxx@estudiants.urv.cat
-#	Programador/a 2: yyy.yyy@estudiants.urv.cat
+#	Programador/a 1: evelio.ruiz@estudiants.urv.cat
+#	Programador/a 2: pau.gutierrez@estudiants.urv.cat
 #-------------------------------------------------------------------------------
 # © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
 # Ús exclusiu dins l’assignatura; prohibida la seva redistribució.
