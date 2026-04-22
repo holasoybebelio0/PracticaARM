@@ -813,13 +813,124 @@ e9m22_compare_s:
 @;--------------------------------------------------------------------------
 	.global e9m22_decompose_s
 e9m22_decompose_s:
-				@; ús de registres:
-				@; r0: ...
-		push {lr}
+                @; ús de registres:
+                @; r0: num
+                @; r1: sign_out
+                @; r2: exp_out
+                @; r3: mant_out
+                @; r4: exponent
+                @; r5: mantissa
+                @; r6: signe (temporal)
+    push {r4-r6, lr}
 
-		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
-		
-		pop {pc}
+    @; if (sign_out != 0) { signe = num & E9M22_MASK_SIGN; *sign_out = signe; }
+    cmp r1, #0
+    beq .L_decomp_no_sign
+    ldr r6, =E9M22_MASK_SIGN
+    and r6, r0, r6
+    str r6, [r1]  @; *sign_out = signe
+.L_decomp_no_sign:
+
+    @; exponent = (num & E9M22_MASK_EXP) >> E9M22_m;
+    ldr r4, =E9M22_MASK_EXP
+    and r4, r0, r4
+    lsr r4, r4, #E9M22_m  @; r4 = exponent
+
+    @; mantissa = num & E9M22_MASK_FRAC;
+    ldr r5, =E9M22_MASK_FRAC
+    and r5, r0, r5  @; r5 = mantissa
+
+    @; if (exponent == 0)
+    cmp r4, #0
+    bne .L_decomp_not_zero_exp
+
+    @; if (mantissa == 0) { resultat = E9M22_CLASS_ZERO; if (exp_out != 0) *exp_out = 0; if (mant_out != 0) *mant_out = 0; } else { ... DENORMAL ... }
+    cmp r5, #0
+    bne .L_decomp_denormal
+
+    @; ZERO
+    cmp r2, #0
+    beq .L_decomp_zero_no_exp
+    mov r6, #0
+    strh r6, [r2]  @; *exp_out = 0 (signed short)
+.L_decomp_zero_no_exp:
+    cmp r3, #0
+    beq .L_decomp_zero_no_mant
+    mov r6, #0
+    str r6, [r3]  @; *mant_out = 0
+.L_decomp_zero_no_mant:
+    mov r0, #E9M22_CLASS_ZERO
+    b .L_decomp_fin
+
+.L_decomp_denormal:
+    @; DENORMAL: resultat = E9M22_CLASS_DENORMAL; if (exp_out != 0) *exp_out = E9M22_Emin; if (mant_out != 0) *mant_out = mantissa;
+    cmp r2, #0
+    beq .L_decomp_den_no_exp
+    ldr r6, =E9M22_Emin
+    strh r6, [r2]  @; *exp_out = E9M22_Emin (-254)
+.L_decomp_den_no_exp:
+    cmp r3, #0
+    beq .L_decomp_den_no_mant
+    str r5, [r3]  @; *mant_out = mantissa
+.L_decomp_den_no_mant:
+    mov r0, #E9M22_CLASS_DENORMAL
+    b .L_decomp_fin
+
+.L_decomp_not_zero_exp:
+    @; else if (exponent == (E9M22_MASK_EXP >> E9M22_m))  // 511
+    ldr r6, =E9M22_MASK_EXP
+    lsr r6, r6, #E9M22_m  @; r6 = 511
+    cmp r4, r6
+    bne .L_decomp_normal
+
+    @; if (mantissa == 0) { INFINITE } else { NAN }
+    cmp r5, #0
+    bne .L_decomp_nan
+
+    @; INFINITE: resultat = E9M22_CLASS_INFINITE; if (exp_out != 0) *exp_out = 511; if (mant_out != 0) *mant_out = 0;
+    cmp r2, #0
+    beq .L_decomp_inf_no_exp
+    strh r6, [r2]  @; *exp_out = 511 (r6 is 511)
+.L_decomp_inf_no_exp:
+    cmp r3, #0
+    beq .L_decomp_inf_no_mant
+    mov r6, #0
+    str r6, [r3]  @; *mant_out = 0
+.L_decomp_inf_no_mant:
+    mov r0, #E9M22_CLASS_INFINITE
+    b .L_decomp_fin
+
+.L_decomp_nan:
+    @; NAN: resultat = E9M22_CLASS_NAN; if (exp_out != 0) *exp_out = 511; if (mant_out != 0) *mant_out = mantissa;
+    cmp r2, #0
+    beq .L_decomp_nan_no_exp
+    strh r6, [r2]  @; *exp_out = 511
+.L_decomp_nan_no_exp:
+    cmp r3, #0
+    beq .L_decomp_nan_no_mant
+    str r5, [r3]  @; *mant_out = mantissa
+.L_decomp_nan_no_mant:
+    mov r0, #E9M22_CLASS_NAN
+    b .L_decomp_fin
+
+.L_decomp_normal:
+    @; NORMAL: resultat = E9M22_CLASS_NORMAL; if (exp_out != 0) *exp_out = exponent - E9M22_bias; if (mant_out != 0) *mant_out = mantissa | E9M22_1_IMPLICIT_NORMAL;
+    cmp r2, #0
+    beq .L_decomp_norm_no_exp
+    ldr r6, =E9M22_bias
+    sub r6, r4, r6  @; r6 = exponent - E9M22_bias
+    strh r6, [r2]  @; *exp_out = exponent - E9M22_bias
+.L_decomp_norm_no_exp:
+    cmp r3, #0
+    beq .L_decomp_norm_no_mant
+    ldr r6, =E9M22_1_IMPLICIT_NORMAL
+    orr r6, r5, r6  @; r6 = mantissa | E9M22_1_IMPLICIT_NORMAL
+    str r6, [r3]  @; *mant_out = mantissa | E9M22_1_IMPLICIT_NORMAL
+.L_decomp_norm_no_mant:
+    mov r0, #E9M22_CLASS_NORMAL
+
+.L_decomp_fin:
+    pop {r4-r6, pc}
 
 
 
