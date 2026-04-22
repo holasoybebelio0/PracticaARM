@@ -706,7 +706,7 @@ e9m22_abs_s:
 	.global e9m22_compare_s
 e9m22_compare_s:
 				
-    push {r4-r9, pc}
+    push {r4-r9, lr}
 
     mov r4, r0              @; r4 = num1
     mov r5, r1              @; r5 = num2

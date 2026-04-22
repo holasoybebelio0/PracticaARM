@@ -131,26 +131,4 @@ e9m22_t avgmaxmin_month(e9m22_t ttemp[][12], unsigned short nrows, unsigned shor
     return(avg);
 }
 
-@;-----------------------------------------------------------------------
-@; Fahrenheit2Celsius(): converteix Fahrenheit a Celsius (E9M22)
-@;	Entrada: R0 (input Fahrenheit)
-@;	Sortida: R0 (resultat Celsius)
-@;-----------------------------------------------------------------------
-	.global Fahrenheit2Celsius
-Fahrenheit2Celsius:
-    @; PROLOGUE: Salvem els registres que farem servir i l'adreça de retorn
-    push {r4, lr}           @; Salvem r4 i lr a la pila per preservar-los
-    mov  r4, r0             @; Guardem l'input (Fahrenheit) a r4
 
-    @; 1a part càlcul: resultat = (input - 32.0)
-    @; El valor 32.0 en format E9M22 és 0x41000000
-    ldr  r1, =0x41000000    @; Carreguem la constant 32.0 a r1
-    bl   e9m22_sub          @; Crida a la resta: r0 = r4 - r1
-
-    @; 2a part càlcul: resultat = (input - 32.0) * 5/9
-    @; El valor 5.0 / 9.0 (aprox. 0.555555) en format E9M22 és 0x3F0E38E3
-    ldr  r1, =0x3F0E38E3    @; Carreguem la constant 5/9 a r1
-    bl   e9m22_mul          @; Crida a la multiplicació: r0 = r0 * r1
-
-    @; EPILOGUE: Alliberem la pila i tornem
-    pop  {r4, pc}           @; Restaurem r4 i fem el salt de tornada
