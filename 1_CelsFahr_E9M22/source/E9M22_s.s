@@ -47,44 +47,44 @@ e9m22_classify_s:
 	and r2, r0, r1 @; exponent
 		
 	cmp r2, #0
-	beq L_else_classify @; if ( (exponent != 0) && (exponent != E9M22_MASK_EXP) )
+	beq .L_else_classify @; if ( (exponent != 0) && (exponent != E9M22_MASK_EXP) )
 	cmp r2, r1 
-	beq L_else_classify
+	beq .L_else_classify
 
 		@; ÉS NORMAL: 
 	mov r0, #E9M22_CLASS_NORMAL 
-	b L_fin_classify
+	b .L_fin_classify
 
-L_else_classify:
+.L_else_classify:
 		ldr r1, =E9M22_MASK_FRAC @; ara utilitzarem l'altre màscara (no cal l'altre)
 		and r3, r0, r1 @; mantissa
 
 		cmp r2, #0 @; if (exponent == 0)
-		bne L_classify_inf_nan @; Pot ser infinit o NaN
+		bne .L_classify_inf_nan @; Pot ser infinit o NaN
 
 		cmp r3, #0 @; if (mantissa != 0)
-		beq L_classify_class_zero @; És de la classe ZERO
+		beq .L_classify_class_zero @; És de la classe ZERO
 
-	L_classify_class_denormal: 
+	.L_classify_class_denormal: 
 		@; si no és de la classe ZERO seguirà per aqui el codi: 
 		@; ÉS DENORMAL
 		mov r0, #E9M22_CLASS_DENORMAL
-		b L_fin_classify
-	L_classify_inf_nan:
+		b .L_fin_classify
+	.L_classify_inf_nan:
 		cmp r3, #0
-		bne L_classify_class_nan @; si (mantissa != 0) és NaN
+		bne .L_classify_class_nan @; si (mantissa != 0) és NaN
 
 		@; ÉS INFINIT
 		mov r0, #E9M22_CLASS_INFINITE
-		b L_fin_classify
+		b .L_fin_classify
 
-	L_classify_class_nan:
+	.L_classify_class_nan:
 		mov r0, #E9M22_CLASS_NAN @; ÉS NaN
-		b L_fin_classify
-	L_classify_class_zero: 
+		b .L_fin_classify
+	.L_classify_class_zero: 
 		mov r0, #E9M22_CLASS_ZERO @; ÉS ZERO
-		b L_fin_classify
-L_fin_classify:
+		b .L_fin_classify
+.L_fin_classify:
 	pop {r1-r3, pc}
 
 
@@ -110,19 +110,19 @@ e9m22_is_normal_s:
 		and r2, r0, r1 @; exponent = num & EM922_MASK_EXP assignat a R2
 
 		cmp r2, #0 		@ Si exponente == 0 -> no es normal
-		beq _fals_if_is_normal
+		beq .L_fals_if_is_normal
 		
 		cmp r2, r1 		@ Si exponente == todos 1s -> no es normal
-		beq _fals_if_is_normal
+		beq .L_fals_if_is_normal
 
 		ldr r0, =0xFC2026	@ Sí es normal (Retornar True / Valor != 0)
-		b _fin_is_normal
+		b .L_fin_is_normal
 		
 
-	_fals_if_is_normal: 
+	.L_fals_if_is_normal: 
 		mov r0, #0 @; assignem valor 0 a resultat
 	
-	_fin_is_normal:
+	.L_fin_is_normal:
 		pop {r1-r2, pc}
 
 
@@ -141,32 +141,31 @@ e9m22_is_denormal_s:
 				@; ús de registres:
 				@; r0: valor a detectar si és DENORMAL
 				@; r1: valor amb la màscara E9M22_MASK_EXP
-				@; r2: exponent
-				@; r3: mantissa
+				@; r2: exponent i posteriorment mantissa
 
-		push {r1-r3, lr}
+		push {r1-r2, lr}
 
 		ldr r1, =E9M22_MASK_EXP @; carreguem la màscara a r1
 		and r2, r0, r1 @; operació exponent assignada a r2
 		
 
 		cmp r2, #0 
-		bne _fals_if_is_denormal @; si exponent != 0, fals
+		bne .L_fals_if_is_denormal @; si exponent != 0, fals
 		
 		ldr r1, =E9M22_MASK_FRAC @;Carreguem Mascara mantissa
-		and r3, r0, r1			 @;r3 = Mantissa Real
+		and r2, r0, r1			 @;r2 = Mantissa 
 		
-		cmp r3, #0
-		beq _fals_if_is_denormal @; si mantissa == 0, fals
+		cmp r2, #0
+		beq .L_fals_if_is_denormal @; si mantissa == 0, fals
 
 		ldr r0, =0xFC2026 @; el valor sí es DENORMAL
-		b _fin_is_denormal
+		b .L_fin_is_denormal
 
-	_fals_if_is_denormal:
+	.L_fals_if_is_denormal:
 		mov r0, #0 @; assignem 0 a resultat
 	
-	_fin_is_denormal:
-		pop {r1-r3, pc}
+	.L_fin_is_denormal:
+		pop {r1-r2, pc}
 
 
 
@@ -183,35 +182,34 @@ e9m22_is_denormal_s:
 e9m22_is_zero_s:
 				@; ús de registres:
 				@; r0: valor a detectar si és de classe ZERO
-				@; r1: valor amb la màscara E9M22_MASK_EXP
-				@; r2: valor amb la màscara E9M22_MASK_FRAC
-				@; r3: exponent
-				@; r4: mantissa
+				@; r1: valor amb la màscara E9M22_MASK_EXP 
+					@; (i posteriorment màscara E9M22_MASK_FRAC)
+				@; r2: exponent i posteriorment mantissa
 
-		push {r1-r4, lr}
+		push {r1-r2, lr}
 
 		ldr r1, =E9M22_MASK_EXP
 		
 		and r2, r0, r1 @; exponent = num & E9M22_MASK_EXP
 
 		cmp r2, #0 @; si exponent != 0, fals
-		bne _fals_if_is_zero 
+		bne .L_fals_if_is_zero 
 
 		ldr r1, =E9M22_MASK_FRAC
 
 		and r2, r0, r1 @; mantissa = num & E9M22_MASK_FRAC
 
 		cmp r2, #0 @; si mantissa != 0, fals
-		bne _fals_if_is_zero
+		bne .L_fals_if_is_zero
 
 		ldr r0, =0xFC2026 @; carreguem el valor a resultat si és classe ZERO
-		b _fin_is_zero
+		b .L_fin_is_zero
 
-	_fals_if_is_zero:
+	.L_fals_if_is_zero:
 		mov r0, #0 @; valor de resultat si no és classe ZERO
 	
-	_fin_is_zero:
-		pop {r1-r4, pc}
+	.L_fin_is_zero:
+		pop {r1-r2, pc}
 
 
 
@@ -228,33 +226,33 @@ e9m22_is_zero_s:
 e9m22_is_infinite_s:
 				@; ús de registres:
 				@; r0: valor E9M22 a detectar si es INFINIT
-				@; r1: màscara E9M22_MASK_EXP
-				@; r2: màscara E9M22_MASK_FRAC
-				@; r3: exponent
-				@; r4: mantissa
+				@; r1: màscara E9M22_MASK_EXP 
+					@; (i posteriorment màscara E9M22_MASK_FRAC)
+				@; r2: exponent i posteriorment mantissa
 
-		push {r1-r4, lr}
+		push {r1-r2, lr}
 
 		ldr r1, =E9M22_MASK_EXP 
-		ldr r2, =E9M22_MASK_FRAC
+		and r2, r0, r1 @; exponent 
+		
 
-		and r3, r0, r1 @; exponent 
-		and r4, r0, r2 @; mantissa
+		cmp r2, r1 @; si exponent != E9M22_MASK_EXP, fals
+		bne .L_fals_if_is_infinite
 
-		cmp r3, r1 @; si exponent != E9M22_MASK_EXP, fals
-		bne _fals_if_is_infinite
+		ldr r1, =E9M22_MASK_FRAC
+		and r2, r0, r1 @; mantissa
 
-		cmp r4, #0 @; o si mantissa != 0, fals
-		bne _fals_if_is_infinite
+		cmp r2, #0 @; o si mantissa != 0, fals
+		bne .L_fals_if_is_infinite
 
 		ldr r0, =0xFC2026 @; es infinit
-		b _fin_is_infinite
+		b .L_fin_is_infinite
 
-	_fals_if_is_infinite:
+	.L_fals_if_is_infinite:
 		mov r0, #0 @; no es infinit, valor 0 a resultat
 	
-	_fin_is_infinite:
-		pop {r1-r4, pc}
+	.L_fin_is_infinite:
+		pop {r1-r2, pc}
 
 
 
@@ -272,31 +270,32 @@ e9m22_is_nan_s:
 				@; ús de registres:
 				@; r0: valor E9M22 a detectar si és classe NAN
 				@; r1: màscara E9M22_MASK_EXP
-				@; r2: màscara E9M22_MASK_FRAC
-				@; r3: exponent
-				@; r4: mantissa
+				@; r2: exponent i posteriorment mantissa
 
-		push {r1-r4, lr}
+		push {r1-r2, lr}
 		ldr r1, =E9M22_MASK_EXP
-		ldr r2, =E9M22_MASK_FRAC
 
-		and r3, r0, r1 @; exponent
-		and r4, r0, r2 @; mantissa
 
-		cmp r3, r1	@; si exponent != E9M22_MASK_EXP, fals
-		bne _fals_if_is_nan
+		and r2, r0, r1 @; exponent
+		
 
-		cmp r4, #0 @; si mantissa == 0, fals
-		beq _fals_if_is_nan
+		cmp r2, r1	@; si exponent != E9M22_MASK_EXP, fals
+		bne .L_fals_if_is_nan
+
+		ldr r1, =E9M22_MASK_FRAC
+		and r2, r0, r1 @; mantissa
+		
+		cmp r2, #0 @; si mantissa == 0, fals
+		beq .L_fals_if_is_nan
 
 		ldr r0, =0xFC2026 @; si es NaN
-		b _fin_is_nan
+		b .L_fin_is_nan
 	
-	_fals_if_is_nan:
+	.L_fals_if_is_nan:
 		mov r0, #0 @; no es NaN, valor de resultat 0
 
-	_fin_is_nan:	
-		pop {r1-r4, pc}
+	.L_fin_is_nan:	
+		pop {r1-r2, pc}
 
 
 
@@ -318,19 +317,19 @@ e9m22_is_finite_s:
 			
 		push {r1-r2, lr}
 
-		ldr r1, =E9M22_MASK_EXP
+		ldr r1, =E9M22_MASK_EXP @; carreguem la màscara E9M22_MASK_EXP
 		
-		and r2, r0, r1
-		cmp r2, r1
-		beq _fals_if_is_finite
+		and r2, r0, r1 @; exponent 
+		cmp r2, r1 @; si exponent == E9M22_MASK_EXP, fals 
+		beq .L_fals_if_is_finite
 
 		ldr r0, =0xFC2026
-		b _fin_is_finite 
+		b .L_fin_is_finite 
 	
-	_fals_if_is_finite: 
-		mov r0, #0
+	.L_fals_if_is_finite: 
+		mov r0, #0 @; no es finito, valor de resultat 0
 	
-	_fin_is_finite:
+	.L_fin_is_finite:
 		pop {r1-r2, pc}
 
 
@@ -357,15 +356,15 @@ e9m22_is_negative_s:
 		and r2, r0, r1 @; signe
 		
 		cmp r2, r1 @; si no és negatiu, fals 
-		bne _fals_if_is_negative
+		bne .L_fals_if_is_negative
 
 		ldr r0, =0xFC2026 @; és negatiu
-		b _fin_is_negative
+		b .L_fin_is_negative
 
-	_fals_if_is_negative:
+	.L_fals_if_is_negative:
 		mov r0, #0 @; no és negatiu
 	
-	_fin_is_negative:
+	.L_fin_is_negative:
 		pop {r1-r2, pc}
 
 
@@ -565,18 +564,18 @@ e9m22_inv_s:
     mov  r0, r4                @; R0 = num
     bl   e9m22_is_finite       
     cmp  r0, #0                @; Comprovem si el resultat és fals (0)
-    beq  L_No_Es_Finit     @; Si no és finit
+    beq  .L_No_Es_Finit     @; Si no és finit
 
  
 
-L_No_Es_Finit:
+.L_No_Es_Finit:
 
     cmp  r0, #0                @; if ( e9m22_is_finite(num) )
-    beq  L_inv_nan_inf         @; Si no és finit, saltem al final (NaN o Infinit)
+    beq  .L_inv_nan_inf         @; Si no és finit, saltem al final (NaN o Infinit)
 
     
     cmp  r5, #E9M22_CLASS_ZERO @; if ( class != E9M22_CLASS_ZERO )
-    beq  L_inv_es_zero         @; Si és zero, saltem a la part d'inversa = infinit
+    beq  .L_inv_es_zero         @; Si és zero, saltem a la part d'inversa = infinit
 
     @; --- CAS NORMAL O DENORMAL ---
     @; Carreguem valors desats a la pila per e9m22_decompose
@@ -587,13 +586,13 @@ L_No_Es_Finit:
     mov   r0, r8
     bl    count_trailing_zeros
     cmp   r0, #0
-    ble   L_inv_skip_tz        @; if (num_trailing_zeros > 0)
+    ble   .L_inv_skip_tz        @; if (num_trailing_zeros > 0)
     
     @; mant >>= num_trailing_zeros; exp += num_trailing_zeros;
     lsr   r8, r8, r0           
     add   r6, r6, r0           
 
-L_inv_skip_tz:
+.L_inv_skip_tz:
     @; div_mod(0x80000000, mant, &quo, &res);
     ldr   r0, =0x80000000      @; dividend
     mov   r1, r8               @; divisor (mant ajustat)
@@ -609,19 +608,19 @@ L_inv_skip_tz:
 
     @; if (res > 0)
     cmp   r9, #0
-    beq   L_inv_normalize
+    beq   .L_inv_normalize
 
     @; num_leading_zeros = count_leading_zeros(mant_div);
     mov   r0, r7
     bl    count_leading_zeros
     cmp   r0, #2               @; if (num_leading_zeros >= 2)
-    blt   L_inv_skip_shift
+    blt   .L_inv_skip_shift
     
     @; mant_div <<= 2; exp_div -= 2;
     lsl   r7, r7, #2
     sub   r6, r6, #2
 
-L_inv_skip_shift:
+.L_inv_skip_shift:
     
     @; if (mant <= res*2) Round bit = 1 (mant_div |= 2)
     mov   r0, r9, lsl #1       @; r0 = res * 2
@@ -632,27 +631,27 @@ L_inv_skip_shift:
     cmp   r8, r0
     orrlt r7, r7, #1           
 
-L_inv_normalize:
+.L_inv_normalize:
     @; inversa = e9m22_normalize_and_round(signe_div, exp_div, mant_div);
     ldr   r0, [sp, #0]         @; Carreguem signe_div des de la pila
     mov   r1, r6               @; r1 = exp_div
     mov   r2, r7               @; r2 = mant_div
     bl    e9m22_normalize_and_round
-    b     L_inv_fi       @;r0 = resultat
+    b     .L_inv_fi       @;r0 = resultat
 
-L_inv_es_zero:
+.L_inv_es_zero:
     @; inversa = signe_div | E9M22_INF_POS; (1/0 = infinit amb el mateix signe)
     ldr   r0, [sp, #0]         @; signe_div
     ldr   r1, =E9M22_INF_POS
     orr   r0, r0, r1
-    b     L_inv_fi
+    b     .L_inv_fi
 
-L_inv_nan_inf:
+.L_inv_nan_inf:
     cmp   r5, #E9M22_CLASS_NAN
     moveq r0, r4               @; if (class == NAN) inversa = num (r4)
     ldrne r0, [sp, #0]         @; else (INF) inversa = signe_div (bit 31, resta és 0)
 
-L_inv_fi:
+.L_inv_fi:
      
     pop  {r1-r9, pc}
 	
@@ -723,9 +722,9 @@ e9m22_compare_s:
 
     @; if ( (class1 != E9M22_CLASS_NAN) && (class2 != E9M22_CLASS_NAN) )
     cmp r6, #E9M22_CLASS_NAN
-    beq L_compare_es_nan    @; Salta si num1 és NaN
+    beq ._compare_es_nan    @; Salta si num1 és NaN
     cmp r7, #E9M22_CLASS_NAN
-    beq L_compare_es_nan    @; Salta si num2 és NaN
+    beq ._compare_es_nan    @; Salta si num2 és NaN
 
     @; Obtenir signes: sign1 = num1 & MASK; sign2 = num2 & MASK;
     ldr r2, =E9M22_MASK_SIGN
@@ -734,48 +733,48 @@ e9m22_compare_s:
 
     @; if (sign1 != sign2)
     cmp r8, r9
-    bne L_compare_signes_diferents
+    bne ._compare_signes_diferents
 
     @; MAteix Signe
     cmp r8, #0					
-    bne L_compare_tots_negatius
+    bne ._compare_tots_negatius
 
-L_compare_tots_positius:
+._compare_tots_positius:
     @; Si tots dos son positius, l'ordre és el natural dels bits
     cmp r4, r5
     moveq r0, #E9M22_CMP_EQUAL
     movhi r0, #E9M22_CMP_GREATER
     movlo r0, #E9M22_CMP_LESS
-    b L_compare_final
+    b ._compare_final
 
-L_compare_tots_negatius:
+._compare_tots_negatius:
     @; Si tots dos son negatius, l'ordre s'inverteix respecte al patró de bits
     cmp r4, r5
     moveq r0, #E9M22_CMP_EQUAL
     movhi r0, #E9M22_CMP_LESS      @; Un valor de bits més alt en negatiu és "més petit"
     movlo r0, #E9M22_CMP_GREATER
-    b L_compare_final
+    b ._compare_final
 
-L_compare_signes_diferents:
+._compare_signes_diferents:
     @; if ( (class1 == E9M22_CLASS_ZERO) && (class2 == E9M22_CLASS_ZERO) )
     cmp r6, #E9M22_CLASS_ZERO
-    bne L_compare_no_zeros
+    bne ._compare_no_zeros
     cmp r7, #E9M22_CLASS_ZERO
     moveq r0, #E9M22_CMP_EQUAL     @; +0.0 és igual a -0.0
-    beq L_compare_final
+    beq ._compare_final
 
-L_compare_no_zeros:
+._compare_no_zeros:
     @; Si un es negatiu i l'altre positiu, el positiu sempre es mes gran
     cmp r8, #0
     moveq r0, #E9M22_CMP_GREATER    @; num1 (positiu) > num2 (negatiu)
     movne r0, #E9M22_CMP_LESS       @; num1 (negatiu) < num2 (positiu)
-    b L_compare_final
+    b ._compare_final
 
-L_compare_es_nan:
+._compare_es_nan:
     @; Si algun operand és NaN, no son comparables
     mov r0, #E9M22_CMP_NC_NAN
 
-L_compare_final:
+._compare_final:
    
     pop {r4-r9, pc}
 
@@ -870,7 +869,7 @@ e9m22_round_s:
 
 @;****************************************************************
 @;* Funcions AUXILIARS per treballar amb els bits de codificació *
-@;****************************************************************
+@;**************************************************************** 
 
 
 @;-----------------------------------------------------------------------
