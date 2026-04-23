@@ -60,6 +60,7 @@ typedef unsigned int e9m22_t;
 #define E9M22_2			0x40000000	// Valor +2,0 en format E9M22
 #define E9M22_5			0x40500000	// Valor +5,0 en format E9M22
 #define E9M22_10		0x40900000	// Valor +10,0 en format E9M22
+#define E9M22_12        0x40A00000  // valor +12.0 en format E9M22
 #define E9M22_20		0x40D00000	// Valor +20,0 en format E9M22
 #define E9M22_50		0x41240000	// Valor +50,0 en format E9M22
 #define E9M22_100		0x41640000	// Valor +100,0 en format E9M22
