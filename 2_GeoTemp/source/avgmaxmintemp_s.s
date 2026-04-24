@@ -42,100 +42,81 @@
 @;-----------------------------------------------------------------------
         .global avgmaxmin_city
 avgmaxmin_city:
-		
-        push {r4-r11, lr}		@; Salvar registres modificats i adreça retorn
-		
-		@; r0  = valor temporal i paràmetre per crides a funcions
-		@; r1  = valor temporal i paràmetre per crides a funcions
-		@; r2  = id_city (16 bits) i adreça columna dins la fila
-		@; r3  = *mmres
-		@; r4  = adreça base de la fila de la ciutat seleccionada
-		@; r5  = suma acumulada de temperatures
-		@; r6  = temperatura màxima trobada
-		@; r7  = temperatura mínima
-		@; r8  = id mes temperatura màxima
-		@; r9  = id mes temperatura mínima
-		@; r10 = comptador mes
-		@; r11 = *mmres (copia)
-		
-		mov r2, r2, lsl #16
-		mov r2, r2, lsr #16
-		mov     r4, #48
-		mul     r4, r2, r4
-		add     r4, r0, r4
-	 
-		mov     r11, r3
-	 
-		ldr     r5, [r4]
-		mov     r6, r5
-		mov     r7, r5
-		mov     r8, #0
-		mov     r9, #0
-		mov     r10, #1
-	 
-	.LbucleCiutat:
-		cmp     r10, #12
-		bge     .LfiBucleCiutat
-	 
-		mov     r0, #4
-		mul     r0, r10, r0
-		add     r0, r4, r0
-		ldr     r0, [r0]
-	 
-		push    {r0}
-	 
-		mov     r1, r0
-		mov     r0, r5
-		bl      e9m22_add
-		mov     r5, r0
-	 
-		ldr     r0, [sp]
-		mov     r1, r6
-		bl      e9m22_compare
-		cmp     r0, #E9M22_CMP_GREATER
-		bne     .LtempMinCiutat
-		ldr     r6, [sp]
-		mov     r8, r10
-	 
-	.LtempMinCiutat:
-		ldr     r0, [sp]
-		mov     r1, r7
-		bl      e9m22_compare
-		cmp     r0, #E9M22_CMP_LESS
-		bne     .LseguentBucleCiutat
-		ldr     r7, [sp]
-		mov     r9, r10
-	 
-	.LseguentBucleCiutat:
-		pop     {r0}
-		add     r10, r10, #1
-		b       .LbucleCiutat
-	 
-	.LfiBucleCiutat:
-		mov     r0, #12
-		bl      int_to_e9m22
-		mov     r1, r0
-		mov     r0, r5
-		bl      e9m22_div
-		mov     r5, r0
-	 
-		str     r7, [r11, #MM_TMINC]
-		str     r6, [r11, #MM_TMAXC]
-	 
-		mov     r0, r7
-		bl      Celsius2Fahrenheit
-		str     r0, [r11, #MM_TMINF]
-	 
-		mov     r0, r6
-		bl      Celsius2Fahrenheit
-		str     r0, [r11, #MM_TMAXF]
-	 
-		strh    r9, [r11, #MM_IDMIN]
-		strh    r8, [r11, #MM_IDMAX]
-	 
-		mov     r0, r5
-	 
-        pop {r4-r11, pc}			@; restaurar registres modificats i retornar
+        push {r3, r4-r11, lr}   @; Desa registres i alinea pila
+
+        mov     r4, r0          @; r4 = ttemp
+        mov     r6, r2          @; r6 = id_city
+
+        mov     r0, #48         @; Mida fila (12x4 bytes)
+        mul     r0, r6, r0      @; Offset ciutat
+        add     r4, r4, r0      @; r4 = Base ciutat (mes 0)
+
+        ldr     r7, [r4]        @; r7 = Suma
+        mov     r8, r7          @; r8 = Max
+        mov     r9, r7          @; r9 = Min
+        mov     r10, #0         @; r10 = id_max
+        mov     r11, #0         @; r11 = id_min
+        mov     r6, #1          @; r6 = i (mes 1)
+
+    .LbucleCiutat:
+        cmp     r6, #12         
+        bge     .LfiBucleCiutat @; Fi si i >= 12
+     
+        add     r4, r4, #4      @; Següent mes
+
+        mov     r0, r7          
+        ldr     r1, [r4]        
+        bl      e9m22_add
+        mov     r7, r0          @; Actualitza suma
+     
+        ldr     r0, [r4]        
+        mov     r1, r8          
+        bl      e9m22_compare
+        cmp     r0, #E9M22_CMP_GREATER
+        bne     .LtempMinCiutat
+        ldr     r8, [r4]        @; Nou Max
+        mov     r10, r6         @; Nou id_max
+     
+    .LtempMinCiutat:
+        ldr     r0, [r4]        
+        mov     r1, r9          
+        bl      e9m22_compare
+        cmp     r0, #E9M22_CMP_LESS
+        bne     .LseguentBucleCiutat
+        ldr     r9, [r4]        @; Nou Min
+        mov     r11, r6         @; Nou id_min
+     
+    .LseguentBucleCiutat:
+        add     r6, r6, #1      @; i++
+        b       .LbucleCiutat
+     
+    .LfiBucleCiutat:
+        mov     r0, #12
+        bl      int_to_e9m22    
+        mov     r1, r0          @; Divisor = 12.0
+        mov     r0, r7          
+        bl      e9m22_div
+        mov     r7, r0          @; r7 = Mitjana
+     
+        ldr     r3, [sp, #0]    @; Recupera *mmres
+     
+        str     r9, [r3, #MM_TMINC]  @; Desa Min (C)
+        str     r8, [r3, #MM_TMAXC]  @; Desa Max (C)
+        strh    r11, [r3, #MM_IDMIN] @; Desa id_min
+        strh    r10, [r3, #MM_IDMAX] @; Desa id_max
+     
+        mov     r0, r9
+        bl      Celsius2Fahrenheit
+        ldr     r3, [sp, #0]
+        str     r0, [r3, #MM_TMINF]  @; Desa Min (F)
+     
+        mov     r0, r8
+        bl      Celsius2Fahrenheit
+        ldr     r3, [sp, #0]
+        str     r0, [r3, #MM_TMAXF]  @; Desa Max (F)
+     
+        mov     r0, r7          @; Retorna Mitjana
+        pop     {r3, r4-r11, pc} @; Restaura i surt			@; restaurar registres modificats i retornar
 
 
 
@@ -155,111 +136,81 @@ avgmaxmin_city:
 @;-----------------------------------------------------------------------
         .global avgmaxmin_month
 avgmaxmin_month:
-		
-        push {r4-r11, lr}		@; Salvar registres modificats i adreça retorn
-		
-		@; r0  = ttemp (punter a la taula) , valor temporal i resultat 
-		@; r1  = nrows (nombre de files) / comptador de fila
-		@; r2  = id_month (columna) i valor temporal
-		@; r3  = id fila temperatura mínima
-		@; r4  = adreça temporal ttemp[row][col]
-		@; r5  = suma acumulada de temperatures 
-		@; r6  = temperatura màxima 
-		@; r7  = temperatura mínima 
-		@; r8  = id fila temperatura màxima
-		@; r9  = nrows 
-		@; r10 = id_month 
-		@; r11 = *mmres 
-		
-		mov     r11, r3
-	 
-		mov r2, r2, lsl #16
-		mov r2, r2, lsr #16
-		mov r1, r1, lsl #16
-		mov r1, r1, lsr #16
-	 
-		mov     r9, r1
-		mov     r10, r2
-	 
-		mov r4, r2, lsl #2
-		add     r4, r0, r4
-		ldr     r5, [r4]
-	 
-		mov     r6, r5
-		mov     r7, r5
-		mov     r8, #0
-		mov     r3, #0
-		mov     r1, #1
-	 
-	.LbucleMes:
-		mov r4, r1, lsl #16
-		mov r4, r4, lsr #16
-		cmp     r4, r9
-		bge     .LfiBucleMes
-	 
-		mov     r4, #48
-		mul     r4, r1, r4
-		mov r2, r10, lsl #2
-		add     r2, r4, r2
-		add     r2, r0, r2
-		ldr     r2, [r2]
-	 
-		push    {r0, r1, r2}
-	 
-		mov     r1, r2
-		mov     r0, r5
-		bl      e9m22_add
-		mov     r5, r0
-	 
-		ldr     r0, [sp, #8]
-		mov     r1, r6
-		bl      e9m22_compare
-		cmp     r0, #E9M22_CMP_GREATER
-		bne     .LtempMinMes
-		ldr     r6, [sp, #8]
-		ldr     r8, [sp, #4]
-	 
-	.LtempMinMes:
-		ldr     r0, [sp, #8]
-		mov     r1, r7
-		bl      e9m22_compare
-		cmp     r0, #E9M22_CMP_LESS
-		bne     .LseguentBucleMes
-		ldr     r7, [sp, #8]
-		ldr     r3, [sp, #4]
-	 
-	.LseguentBucleMes:
-		pop     {r0, r1, r2}
-		add     r1, r1, #1
-		b       .LbucleMes
-	 
-	.LfiBucleMes:
-		mov     r0, r9
-		bl      int_to_e9m22
-		mov     r1, r0
-		mov     r0, r5
-		bl      e9m22_div
-		mov     r5, r0
-	 
-		str     r7, [r11, #MM_TMINC]
-		str     r6, [r11, #MM_TMAXC]
-	 
-		mov     r0, r7
-		bl      Celsius2Fahrenheit
-		str     r0, [r11, #MM_TMINF]
-	 
-		mov     r0, r6
-		bl      Celsius2Fahrenheit
-		str     r0, [r11, #MM_TMAXF]
-	 
-		strh    r3, [r11, #MM_IDMIN]
-		strh    r8, [r11, #MM_IDMAX]
-	 
-		mov     r0, r5
-		
-        pop {r4-r11, pc}			@; restaurar registres modificats i retornar
+        push {r3, r4-r11, lr}   @; Desa registres i alinea pila
 
+        mov     r4, r0          @; r4 = ttemp
+        mov     r5, r1          @; r5 = nrows
+        mov     r6, r2          @; r6 = id_month
 
+        mov     r0, #4          @; Mida dada (4 bytes)
+        mul     r0, r6, r0      @; Offset mes
+        add     r4, r4, r0      @; r4 = Base mes (ciutat 0)
+
+        ldr     r7, [r4]        @; r7 = Suma
+        mov     r8, r7          @; r8 = Max
+        mov     r9, r7          @; r9 = Min
+        mov     r10, #0         @; r10 = id_max
+        mov     r11, #0         @; r11 = id_min
+        mov     r6, #1          @; r6 = i (ciutat 1)
+
+    .LbucleMes:
+        cmp     r6, r5          
+        bge     .LfiBucleMes    @; Fi si i >= nrows
+     
+        add     r4, r4, #48     @; Següent ciutat
+
+        mov     r0, r7          
+        ldr     r1, [r4]        
+        bl      e9m22_add
+        mov     r7, r0          @; Actualitza suma
+     
+        ldr     r0, [r4]        
+        mov     r1, r8          
+        bl      e9m22_compare
+        cmp     r0, #E9M22_CMP_GREATER
+        bne     .LtempMinMes
+        ldr     r8, [r4]        @; Nou Max
+        mov     r10, r6         @; Nou id_max
+     
+    .LtempMinMes:
+        ldr     r0, [r4]        
+        mov     r1, r9          
+        bl      e9m22_compare
+        cmp     r0, #E9M22_CMP_LESS
+        bne     .LseguentBucleMes
+        ldr     r9, [r4]        @; Nou Min
+        mov     r11, r6         @; Nou id_min
+     
+    .LseguentBucleMes:
+        add     r6, r6, #1      @; i++
+        b       .LbucleMes
+     
+    .LfiBucleMes:
+        mov     r0, r5          
+        bl      int_to_e9m22    
+        mov     r1, r0          @; Divisor = nrows (float)
+        mov     r0, r7          
+        bl      e9m22_div
+        mov     r7, r0          @; r7 = Mitjana
+     
+        ldr     r3, [sp, #0]    @; Recupera *mmres
+     
+        str     r9, [r3, #MM_TMINC]  @; Desa Min (C)
+        str     r8, [r3, #MM_TMAXC]  @; Desa Max (C)
+        strh    r11, [r3, #MM_IDMIN] @; Desa id_min
+        strh    r10, [r3, #MM_IDMAX] @; Desa id_max
+     
+        mov     r0, r9
+        bl      Celsius2Fahrenheit
+        ldr     r3, [sp, #0]
+        str     r0, [r3, #MM_TMINF]  @; Desa Min (F)
+     
+        mov     r0, r8
+        bl      Celsius2Fahrenheit
+        ldr     r3, [sp, #0]
+        str     r0, [r3, #MM_TMAXF]  @; Desa Max (F)
+     
+        mov     r0, r7          @; Retorna Mitjana
+        pop     {r3, r4-r11, pc} @; Restaura i surt
 
 .end
-

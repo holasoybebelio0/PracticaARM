@@ -557,7 +557,7 @@ e9m22_inv_s:
     add  r1, sp, #0            @; R1 = &signe_div (adreça a la pila)
     add  r2, sp, #4            @; R2 = &exp_sh    (adreça a la pila)
     add  r3, sp, #8            @; R3 = &mant_nat  (adreça a la pila)
-    bl   e9m22_decompose       @; Crida a la rutina; el resultat 'class' queda a R0
+    bl   e9m22_decompose_s       @; Crida a la rutina; el resultat 'class' queda a R0
     mov  r5, r0                @; Guardem 'class' a r5
 
     @; if ( e9m22_is_finite(num) )
