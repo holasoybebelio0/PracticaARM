@@ -107,8 +107,8 @@
 /* Funcions auxiliars: NORMALITZACIÓ i ARRODONIMENT E9M22 */
 /**********************************************************/
 
-#define e9m22_decompose	e9m22_decompose_c_	// Versió en C
-//#define	e9m22_decompose	e9m22_decompose_s	// Versió assemblador
+//#define e9m22_decompose	e9m22_decompose_c_	// Versió en C
+#define	e9m22_decompose	e9m22_decompose_s	// Versió assemblador
 
 #define e9m22_normalize_and_round		e9m22_normalize_and_round_c_	// Versió en C
 //#define	e9m22_normalize_and_round	e9m22_normalize_and_round_s	// Versió assemblador

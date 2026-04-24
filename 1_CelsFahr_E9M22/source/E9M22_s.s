@@ -474,20 +474,23 @@ e9m22_add_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_sub_s
 e9m22_sub_s:
-    push {r1-r2, lr}          
-
-    
-    mov r2, r0              @; num1 = r4
-    mov r0, r1              @; num2 = r0
-    bl e9m22_neg_s      @; R0 = e9m22_neg_s(num2)  resultat=num2(R0) negat
-
-    
-    mov r1, r0              @; R1 = num2 negat (R0)
-    mov r0, r2              @; R0 = num1
-    bl e9m22_add_c_        @; R0 = e9m22_add_s(num1, num2negat)
-
-    
-    pop {r1-r2, pc}        
+			@; r1 = num2
+			@; r2 = num1
+			@; r3 = num2negat
+		
+		push {r1-r3, lr}
+		
+		mov r2, r0
+		
+		mov r0, r1
+		bl e9m22_neg_s
+		mov r3, r0
+		
+		mov r0, r2
+		mov r1, r3
+		bl e9m22_add_c_
+		
+		pop {r1-r3, pc}      
 
 
 
@@ -503,9 +506,13 @@ e9m22_sub_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_mul_s
 e9m22_mul_s:
-    push    {lr}
-    
-    pop     {pc}
+				@; ús de registres:
+				@; r0: ...
+		push {lr}
+
+		ldr r0, =E9M22_sNAN		@; to-do: NaN per indicar rutina pendent
+		
+		pop {pc}
 
 
 
@@ -521,21 +528,25 @@ e9m22_mul_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_div_s
 e9m22_div_s:
-    @; Paso 1: Salvar R4 (para preservar num1) y LR (para volver)
-    push {r4, lr}           
+		@; r1 = num2
+		@; r2 = invers2
+		@; r3 = num1
+		
+		  @; Paso 1: Salvar R4 (para preservar num1) y LR (para volver)
+			push {r4, lr}           
 
-    @; Paso 2: Calcular el inverso del segundo operando: 1 / num2
-    mov r4, r0              @; Guardamos num1 en R4 para que no se pierda
-    mov r0, r1              @; Ponemos num2 en R0 para la función inv
-    bl e9m22_inv_c_         @; R0 = e9m22_inv_s(num2) -> resultado: invers2
+			@; Paso 2: Calcular el inverso del segundo operando: 1 / num2
+			mov r4, r0              @; Guardamos num1 en R4 para que no se pierda
+			mov r0, r1              @; Ponemos num2 en R0 para la función inv
+			bl e9m22_inv_s	        @; R0 = e9m22_inv_s(num2) -> resultado: invers2
 
-    @; Paso 3: Realizar la multiplicación: num1 * invers2
-    mov r1, r0              @; Movemos el inverso (resultado de inv) a R1
-    mov r0, r4              @; Recuperamos num1 de R4 y lo ponemos en R0
-    bl e9m22_mul_c_          @; R0 = e9m22_mul_s(num1, invers2)
+			@; Paso 3: Realizar la multiplicación: num1 * invers2
+			mov r1, r0              @; Movemos el inverso (resultado de inv) a R1
+			mov r0, r4              @; Recuperamos num1 de R4 y lo ponemos en R0
+			bl e9m22_mul_c_          @; R0 = e9m22_mul_s(num1, invers2)
 
-    @; Paso 4: Restaurar registros y retornar
-    pop {r4, pc}
+			@; Paso 4: Restaurar registros y retornar
+			pop {r4, pc}
 
 
 
@@ -668,10 +679,21 @@ e9m22_inv_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_neg_s
 e9m22_neg_s:
-    push {r1, lr}
-    ldr r1, =E9M22_MASK_SIGN
-    eor r0, r0, r1      @; xor per invertir el bit
-    pop {r1, pc}
+		@; r0 = resultat
+		@; r1 = num
+		@; r2 = mascara
+		
+		push {r1-r2, lr}
+		
+		mov r1, r0
+		ldr r2, =E9M22_MASK_SIGN
+		
+		bl e9m22_is_negative
+		cmp r0, #0
+		bicne r0, r1, r2
+		orreq r0, r1, r2
+		
+		pop {r1-r2, pc}
 
 
 @;-----------------------------------------------------------------------
@@ -684,10 +706,21 @@ e9m22_neg_s:
 @;-----------------------------------------------------------------------
 	.global e9m22_abs_s
 e9m22_abs_s:
-    push {r1, lr}
-    ldr r1, =E9M22_MASK_SIGN
-    bic r0, r0, r1      @; netejem el bit
-    pop {r1, pc}
+		@; r0 = resultat
+		@; r1 = num
+		@; r2 = mascara
+		
+		push {r1-r2, lr}
+		
+		mov r1, r0
+		ldr r2, =E9M22_MASK_SIGN
+		
+		bl e9m22_is_negative
+		biceq r0, r1, r2
+		movne r0, r1
+		
+		pop {r1-r2, pc}
+
 
 
 @;***********************************************************

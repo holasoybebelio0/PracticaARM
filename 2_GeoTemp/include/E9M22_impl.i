@@ -6,7 +6,7 @@
 @;	(Març 2025, Febrer-Març 2026)
 @;--------------------------------------------------------------------
 @;	Programador/a 1: evelio.ruiz@estudiants.urv.cat
-@;	Programador/a 2: pau.gutierrez@estudiants.urv.cat
+@;	Programador/a 2: yyy.yyy@estudiants.urv.cat
 @;--------------------------------------------------------------------
 @; © URV — Codi de la pràctica d'ARM de Fonaments de Computadors (FC).
 @; Ús exclusiu dins l’assignatura; prohibida la seva redistribució.
@@ -69,8 +69,8 @@ int_to_e9m22	=	int_to_e9m22_c	@; Versió en C
 @;* Operacions ARITMÈTIQUES en Coma Flotant E9M22 *
 @;*************************************************
 
-e9m22_add	=	e9m22_add_c	@; Versió en C
-@;e9m22_add	=	e9m22_add_s	@; Versió assemblador
+@;e9m22_add	=	e9m22_add_c	@; Versió en C
+e9m22_add	=	e9m22_add_s	@; Versió assemblador
 
 @;e9m22_sub	=	e9m22_sub_c	@; Versió en C
 e9m22_sub	=	e9m22_sub_s	@; Versió assemblador
@@ -103,8 +103,8 @@ e9m22_compare	=	e9m22_compare_s	@; Versió assemblador
 @;* Funcions auxiliars: NORMALITZACIÓ i ARRODONIMENT E9M22 *
 @;**********************************************************
 
-e9m22_decompose	=	e9m22_decompose_c	@; Versió en C
-@;e9m22_decompose	=	e9m22_decompose_s	@; Versió assemblador
+@;e9m22_decompose	=	e9m22_decompose_c	@; Versió en C
+e9m22_decompose	=	e9m22_decompose_s	@; Versió assemblador
 
 e9m22_normalize_and_round	=		e9m22_normalize_and_round_c	@; Versió en C
 @;e9m22_normalize_and_round	=	e9m22_normalize_and_round_s	@; Versió assemblador

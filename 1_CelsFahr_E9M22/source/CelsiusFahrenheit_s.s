@@ -35,19 +35,12 @@ Celsius2Fahrenheit:
 				@; ús de registres:
 				@; r0: paràmetre input / resultat output
 				@; rN: ...
-		push {r1, lr}           
-
-		@;resultat = (r0 * 9/5)
-		mov  r1, r0            @; r0 = r1
-		ldr  r1, =0x3FF33333    @; Segon paràmetre: constant 1.8
-		bl   e9m22_mul          @; resultat = e9m22_mul(input, 1.8)
-
-		@; 2a part càlcul: resultat = resultat + 32.0
-		ldr  r1, =0x41000000    
-		bl   e9m22_add
-		
-		
-		pop {r1, pc}
+		push {r4, lr}           
+		ldr  r1, =0x3FF33333    @; Constant 1.8
+		bl   e9m22_mul_c        @; <--- AÑADE _c
+		ldr  r1, =0x41000000    @; Constant 32.0
+		bl   e9m22_add_c        @; <--- AÑADE _c
+		pop {r4, pc}
 
 
 
@@ -63,22 +56,22 @@ Fahrenheit2Celsius:
 				@; ús de registres:
 				@; r0: paràmetre input / resultat output
 				@; rN: ...
-		push {r1, lr}
-		
-		mov r1, r0
+		push {r4, lr}
 		
 		ldr r1, =0x41000000
-		bl e9m22_sub
+		bl e9m22_sub_s
 		
 		
-		ldr r1, =0x3F0E38E3
-		bl e9m22_mul
+		ldr r1, =0x3F871C71
+		bl e9m22_mul_c
 		
 		
-		pop {r1, pc}
+		pop {r4, pc}
+
 
 
 
 
 
 .end
+

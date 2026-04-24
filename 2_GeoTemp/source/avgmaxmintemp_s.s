@@ -45,10 +45,12 @@ avgmaxmin_city:
         push {r3, r4-r11, lr}   @; Desa registres i alinea pila
 
         mov     r4, r0          @; r4 = ttemp
-        mov     r6, r2          @; r6 = id_city
+        
+        lsl     r6, r2, #16
+        lsr     r6, r6, #16     @; r6 = id_city (zero-extended)
 
-        mov     r0, #48         @; Mida fila (12x4 bytes)
-        mul     r0, r6, r0      @; Offset ciutat
+        mov     r1, #48         @; Mida fila (12x4 bytes)
+        mul     r0, r6, r1      @; Offset ciutat
         add     r4, r4, r0      @; r4 = Base ciutat (mes 0)
 
         ldr     r7, [r4]        @; r7 = Suma
@@ -91,10 +93,11 @@ avgmaxmin_city:
         b       .LbucleCiutat
      
     .LfiBucleCiutat:
+        push    {r7}            @; Save sum to protect from clobber
         mov     r0, #12
         bl      int_to_e9m22    
         mov     r1, r0          @; Divisor = 12.0
-        mov     r0, r7          
+        pop     {r0}            @; Restore sum to r0 directly
         bl      e9m22_div
         mov     r7, r0          @; r7 = Mitjana
      
@@ -105,12 +108,12 @@ avgmaxmin_city:
         strh    r11, [r3, #MM_IDMIN] @; Desa id_min
         strh    r10, [r3, #MM_IDMAX] @; Desa id_max
      
-        mov     r0, r9
+        ldr     r0, [r3, #MM_TMINC]
         bl      Celsius2Fahrenheit
         ldr     r3, [sp, #0]
         str     r0, [r3, #MM_TMINF]  @; Desa Min (F)
      
-        mov     r0, r8
+        ldr     r0, [r3, #MM_TMAXC]
         bl      Celsius2Fahrenheit
         ldr     r3, [sp, #0]
         str     r0, [r3, #MM_TMAXF]  @; Desa Max (F)
@@ -139,11 +142,15 @@ avgmaxmin_month:
         push {r3, r4-r11, lr}   @; Desa registres i alinea pila
 
         mov     r4, r0          @; r4 = ttemp
-        mov     r5, r1          @; r5 = nrows
-        mov     r6, r2          @; r6 = id_month
+        
+        lsl     r1, r1, #16
+        lsr     r5, r1, #16     @; r5 = nrows (zero-extended)
+        
+        lsl     r2, r2, #16
+        lsr     r6, r2, #16     @; r6 = id_month (zero-extended)
 
-        mov     r0, #4          @; Mida dada (4 bytes)
-        mul     r0, r6, r0      @; Offset mes
+        mov     r1, #4          @; Mida dada (4 bytes)
+        mul     r0, r6, r1      @; Offset mes
         add     r4, r4, r0      @; r4 = Base mes (ciutat 0)
 
         ldr     r7, [r4]        @; r7 = Suma
@@ -186,10 +193,11 @@ avgmaxmin_month:
         b       .LbucleMes
      
     .LfiBucleMes:
+        push    {r7}            @; Save sum to protect from clobber
         mov     r0, r5          
         bl      int_to_e9m22    
         mov     r1, r0          @; Divisor = nrows (float)
-        mov     r0, r7          
+        pop     {r0}            @; Restore sum to r0 directly
         bl      e9m22_div
         mov     r7, r0          @; r7 = Mitjana
      
@@ -200,12 +208,12 @@ avgmaxmin_month:
         strh    r11, [r3, #MM_IDMIN] @; Desa id_min
         strh    r10, [r3, #MM_IDMAX] @; Desa id_max
      
-        mov     r0, r9
+        ldr     r0, [r3, #MM_TMINC]
         bl      Celsius2Fahrenheit
         ldr     r3, [sp, #0]
         str     r0, [r3, #MM_TMINF]  @; Desa Min (F)
      
-        mov     r0, r8
+        ldr     r0, [r3, #MM_TMAXC]
         bl      Celsius2Fahrenheit
         ldr     r3, [sp, #0]
         str     r0, [r3, #MM_TMAXF]  @; Desa Max (F)

@@ -69,14 +69,14 @@ int_to_e9m22	=	int_to_e9m22_c	@; Versió en C
 @;* Operacions ARITMÈTIQUES en Coma Flotant E9M22 *
 @;*************************************************
 
-@;e9m22_add	=	e9m22_add_c	@; Versió en C
-e9m22_add	=	e9m22_add_s	@; Versió assemblador
+e9m22_add	=	e9m22_add_c	@; Versió en C
+@;e9m22_add	=	e9m22_add_s	@; Versió assemblador
 
 @;e9m22_sub	=	e9m22_sub_c	@; Versió en C
 e9m22_sub	=	e9m22_sub_s	@; Versió assemblador
 
-@;e9m22_mul	=	e9m22_mul_c	@; Versió en C
-e9m22_mul	=	e9m22_mul_s	@; Versió assemblador
+e9m22_mul	=	e9m22_mul_c	@; Versió en C
+@;e9m22_mul	=	e9m22_mul_s	@; Versió assemblador
 
 @;e9m22_div	=	e9m22_div_c	@; Versió en C
 e9m22_div	=	e9m22_div_s	@; Versió assemblador
